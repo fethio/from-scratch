@@ -9,3 +9,13 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+# other stuff
+bookmarks
+elpa/
+ido.last
+recentf
+smex-items
+snippets/
+tramp
+config.el
