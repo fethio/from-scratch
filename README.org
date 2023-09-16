@@ -1,0 +1,8 @@
+#+title: public repo for sharing owns emacs customization
+#+STARTUP: overview
+#+CREATOR: fethi okyar
+#+LANGUAGE: en;tr
+#+OPTIONS: num:nil
+#+ATTR_HTML: :style margin-left: auto; margin-right: auto;
+
+
