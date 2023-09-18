@@ -5,6 +5,16 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 #+TITLE: emacs cofiguration from scratch
 
+* dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents . 15)))
+    (setq dashboard-banner-logo-title "Hello UncleDave!"))
+#+END_SRC
+* modeline
 * interface settings
 ** startup settings
 #+BEGIN_SRC emacs-lisp
@@ -35,7 +45,7 @@
   (electric-pair-mode t)
 #+END_SRC
 ** terminal stuff
-*** ansi term uses zsh
+ ansi term uses zsh
 #+BEGIN_SRC emacs-lisp
   (defvar my-term-shell "/bin/zsh")
   (defadvice ansi-term (before force-bash)
@@ -44,12 +54,20 @@
 
   (global-set-key (kbd "<s-return>") 'ansi-term)
 #+END_SRC
-** modeline
-*** show lines and columns
+** show lines and columns
 #+BEGIN_SRC emacs-lisp
   (line-number-mode 1)
   (column-number-mode 1)
 #+END_SRC
+** Expand region
+A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind ("C-q" . er/expand-region))
+#+END_SRC
+
+
 * helpers
 ** ivy, a prerequisite for others
 #+BEGIN_SRC emacs-lisp
@@ -335,15 +353,6 @@ This annoyed me so much I wrote these two, they take care of it.
     (mapc 'kill-buffer (buffer-list)))
   (global-set-key (kbd "C-M-s-k") 'kill-all-buffers)
 #+END_SRC
-** dashboard
-#+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents . 15)))
-    (setq dashboard-banner-logo-title "Hello UncleDave!"))
-#+END_SRC
 
 
 * Kill ring
@@ -364,7 +373,6 @@ C-n and C-p totally work for this.
     :ensure t
     :bind ("M-y" . popup-kill-ring))
 #+END_SRC
-
 
 * convenient functions
 ** config edit
