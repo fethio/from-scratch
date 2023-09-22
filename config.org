@@ -102,6 +102,14 @@
     (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
 * org mode stuff
+For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+#+END_SRC
+
+Pretty bullets using org-bullets
 ** bullets
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
@@ -110,7 +118,7 @@
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
-
+Yasnippet settings
 ** yasnippet stuff
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
