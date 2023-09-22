@@ -16,6 +16,10 @@ elpa/
 ido.last
 recentf
 smex-items
-snippets/
+# snippets/
 tramp
 config.el
+
+# Session related stuff
+session.*
+\#*
