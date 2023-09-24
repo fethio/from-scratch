@@ -5,8 +5,18 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 #+TITLE: emacs cofiguration from scratch
 
+* dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents . 15)))
+    (setq dashboard-banner-logo-title "Hello UncleDave!"))
+#+END_SRC
+* modeline
 * interface settings
-*** startup settings
+** startup settings
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -34,20 +44,9 @@
 			 ))
   (electric-pair-mode t)
 #+END_SRC
-*** hungry-delete
-#+BEGIN_SRC emacs-lisp
-  (use-package hungry-delete
-    :ensure t
-    :config (global-hungry-delete-mode))
-#+END_SRC
-*** Subwords
-Emacs treats camelCase strings as a single word by default, this changes said behaviour.
-#+BEGIN_SRC emacs-lisp
-  (global-subword-mode 1)
-#+END_SRC
 
 ** terminal stuff
-*** ansi term uses zsh
+ ansi term uses zsh
 #+BEGIN_SRC emacs-lisp
   (defvar my-term-shell "/bin/zsh")
   (defadvice ansi-term (before force-bash)
@@ -56,14 +55,36 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 
   (global-set-key (kbd "<s-return>") 'ansi-term)
 #+END_SRC
-** modeline
-*** show lines and columns
+** show lines and columns
 #+BEGIN_SRC emacs-lisp
   (line-number-mode 1)
   (column-number-mode 1)
 #+END_SRC
 
+** Expand region
+A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind ("C-q" . er/expand-region))
+#+END_SRC
+
 * helpers
+** ivy, a prerequisite for others
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :ensure t
+    :config (ivy-mode 1))
+#+END_SRC
+
+** swiper, the default search is lame
+I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :ensure t
+    :bind ("C-s" . 'swiper))
+#+END_SRC
+
 ** help for C-x, M-x, etc.
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -93,15 +114,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 #+END_SRC
 
-** Expand region
-A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind ("C-q" . er/expand-region))
-#+END_SRC
-
-** avy
+** avy and why it's the best thing in existence
 Many times have I pondered how I can move around buffers even quicker.
 I'm glad to say, that avy is precisely what I needed, and it's precisely what you need as well.
 In short, as you invoke one of avy's functions, you will be prompted for a character
@@ -125,14 +138,6 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     :ensure t
     :init
     (add-hook 'after-init-hook 'global-company-mode))
-#+END_SRC
-
-** swiper and why is the default search so lame
-I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
-#+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :bind ("C-s" . 'swiper))
 #+END_SRC
 
 ** line numbers and programming
@@ -218,80 +223,69 @@ Yasnippet settings
 #+END_SRC
 
 * buffers and windows
-** switch/kill buffers
-*** ibuffer and ido-switch-buffer
+Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
+Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
+
+** Always murder current buffer
+Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
-  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)  
-;;  (defalias 'list-buffers 'ido-switch-buffer)  ;; from zamansky
-#+END_SRC
-*** always kill current buffer
-#+BEGIN_SRC emacs-lisp
-  (defun kill-curr-buffer ()
+  (defun kill-current-buffer ()
+    "Kills the current buffer."
     (interactive)
     (kill-buffer (current-buffer)))
-  (global-set-key (kbd "C-x k") 'kill-curr-buffer)
-#+END_SRC
-** switching windows
-#+BEGIN_SRC emacs-lisp
-  (use-package switch-window
-    :ensure t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    (setq switch-window-shortcut-style 'qwerty)
-    (setq switch-window-qwerty-shortcuts
-	  '("a" "s" "d" "f" "j" "k" "l"))
-    :bind
-    ([remap other-window] . switch-window))
+  (global-set-key (kbd "C-x k") 'kill-current-buffer)
 #+END_SRC
 
-*** window splittin
+** Kill buffers without asking for confirmation
+Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
 #+BEGIN_SRC emacs-lisp
-  (defun split-and-follow-horizontally ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-  (defun split-and-follow-vertically ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
 
-*** scrollin
+** Turn switch-to-buffer into ibuffer
+I don't understand how ibuffer isn't the default option by now.
+It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
 #+BEGIN_SRC emacs-lisp
-  (setq scroll-conservatively 100)
+(global-set-key (kbd "C-x b") 'ibuffer)
 #+END_SRC
 
-** sudo-edit
+** expert-mode
+If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
 #+BEGIN_SRC emacs-lisp
-  (use-package sudo-edit
-    :ensure t
-    :bind ("s-f e" . sudo-edit))
+(setq ibuffer-expert t)
 #+END_SRC
 
-** kill all buffers
+** close-all-buffers
+It's one of those things where I genuinely have to wonder why there is no built in functionality for it.
+Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I'd need to spend a few too many
+seconds doing this than I'd like, here's a solution.
+
+This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it unless you really want to.
 #+BEGIN_SRC emacs-lisp
-  (defun kill-all-buffers ()
+  (defun close-all-buffers ()
+    "Kill all buffers without regard for their origin."
     (interactive)
     (mapc 'kill-buffer (buffer-list)))
-  (global-set-key (kbd "C-M-s-k") 'kill-all-buffers)
+  (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
 
-** dashboard
+* Kill ring
+There is a lot of customization to the kill ring, and while I have not used it much before,
+I decided that it was time to change that.
+** Maximum entries on the ring
+The default is 60, I personally need more sometimes.
 #+BEGIN_SRC emacs-lisp
-  (use-package dashboard
+  (setq kill-ring-max 100)
+#+END_SRC
+
+** popup-kill-ring
+Out of all the packages I tried out, this one, being the simplest, appealed to me most.
+With a simple M-y you can now browse your kill-ring like browsing autocompletion items.
+C-n and C-p totally work for this.
+#+BEGIN_SRC emacs-lisp
+  (use-package popup-kill-ring
     :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents . 15)))
-    (setq dashboard-banner-logo-title "Hello UncleDave!"))
+    :bind ("M-y" . popup-kill-ring))
 #+END_SRC
 
 * convenient functions
