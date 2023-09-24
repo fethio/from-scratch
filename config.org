@@ -34,20 +34,18 @@
 			 ))
   (electric-pair-mode t)
 #+END_SRC
-*** kill-whole-word function
-#+BEGIN_SRC  emacs-lisp
-  (defun kill-whole-word ()
-    (interactive)
-    (backward-word)
-    (kill-word 1))
-  (global-set-key (kbd "C-c w w") 'kill-whole-word)
-#+END_SRC
 *** hungry-delete
 #+BEGIN_SRC emacs-lisp
   (use-package hungry-delete
     :ensure t
     :config (global-hungry-delete-mode))
 #+END_SRC
+*** Subwords
+Emacs treats camelCase strings as a single word by default, this changes said behaviour.
+#+BEGIN_SRC emacs-lisp
+  (global-subword-mode 1)
+#+END_SRC
+
 ** terminal stuff
 *** ansi term uses zsh
 #+BEGIN_SRC emacs-lisp
@@ -64,6 +62,7 @@
   (line-number-mode 1)
   (column-number-mode 1)
 #+END_SRC
+
 * helpers
 ** help for C-x, M-x, etc.
 #+BEGIN_SRC emacs-lisp
@@ -93,7 +92,33 @@
     (ido-vertical-mode 1))
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 #+END_SRC
+
+** Expand region
+A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind ("C-q" . er/expand-region))
+#+END_SRC
+
 ** avy
+Many times have I pondered how I can move around buffers even quicker.
+I'm glad to say, that avy is precisely what I needed, and it's precisely what you need as well.
+In short, as you invoke one of avy's functions, you will be prompted for a character
+that you'd like to jump to in the /visible portion of the current buffer/.
+Afterwards you will notice how all instances of said character have additional letter on top of them.
+Pressing those letters, that are next to your desired character will move your cursor over there.
+Admittedly, this sounds overly complicated and complex, but in reality takes a split second
+and improves your life tremendously.
+
+I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= is moving by searching characters.
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind
+      ("M-s" . avy-goto-char))
+#+END_SRC
+
 ** auto-completion (company)
 #+BEGIN_SRC emacs-lisp
   (use-package company
@@ -101,16 +126,80 @@
     :init
     (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
-* org mode stuff
-For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
+
+** swiper and why is the default search so lame
+I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c l") #'org-store-link)
-  (global-set-key (kbd "C-c a") #'org-agenda)
-  (global-set-key (kbd "C-c c") #'org-capture)
+  (use-package swiper
+    :ensure t
+    :bind ("C-s" . 'swiper))
 #+END_SRC
 
-Pretty bullets using org-bullets
+** line numbers and programming
+Every now and then all of us feel the urge to be productive and write some code.
+In the event that this happens, the following bit of configuration makes sure that 
+we have access to relative line numbering in programming-related modes.
+I highly recommend not enabling =linum-relative-mode= globally, as it messed up 
+something like =ansi-term= for instance.
+#+BEGIN_SRC emacs-lisp
+  (use-package linum-relative
+    :ensure t
+    :config
+      (setq linum-relative-current-symbol "")
+      (add-hook 'prog-mode-hook 'linum-relative-mode))
+#+END_SRC
+
+* org mode stuff
+** keybindings
+For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
+#+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-c l") #'org-store-link)
+   (global-set-key (kbd "C-c a") #'org-agenda)
+   (global-set-key (kbd "C-c c") #'org-capture)
+#+END_SRC
+
+** agenda files
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files
+    '("/home/fethi/snkr/org/gunluk.org" "/home/fethi/snkr/org/bilimsel.org" "/home/fethi/snkr/org/mesleki.org"))
+#+END_SRC
+
+customizations from Rainer König
+** capture mode and templates
+#+BEGIN_SRC emacs-lisp
+ (global-set-key (kbd "<f6>") 'org-capture)
+ (setq org-capture-templates
+   '(("b" "Bilimsel")
+     ("bj" "journal entry" entry
+      (file+headline "~/snkr/org/bilimsel.org" "Journal")
+      (file "~/snkr/org/capture_journal")
+      :empty-lines-before 1)
+     ("bt" "TODO entry" entry
+      (file+headline "~/snkr/org/bilimsel.org" "Capture")
+      (file "~/snkr/org/capture_todo")
+      :empty-lines-before 1)
+     ("m" "Mesleki")
+     ("mj" "journal entry" entry
+      (file+headline "~/snkr/org/mesleki.org" "Journal")
+      (file "~/snkr/org/capture_journal")
+      :empty-lines-before 1)
+     ("mt" "TODO entry" entry
+      (file+headline "~/snkr/org/mesleki.org" "Capture")
+      (file "~/snkr/org/capture_todo")
+      :empty-lines-before 1)))
+#+END_SRC
+
+** logging, drawer settings
+#+BEGIN_SRC emacs-lisp
+ (setq org-log-into-drawer t)
+ (setq org-log-reschedule 'note)
+ (setq org-refile-allow-creating-parent-nodes 'confirm)
+ (setq org-refile-targets '((org-agenda-files :level . 1)))
+ (setq org-refile-use-outline-path 'file)
+#+END_SRC
+
 ** bullets
+Pretty bullets using org-bullets
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
     :ensure t
@@ -118,8 +207,8 @@ Pretty bullets using org-bullets
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
-Yasnippet settings
 ** yasnippet stuff
+Yasnippet settings
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
       :ensure t
@@ -127,12 +216,13 @@ Yasnippet settings
       (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
       (yas-global-mode 1))
 #+END_SRC
+
 * buffers and windows
 ** switch/kill buffers
 *** ibuffer and ido-switch-buffer
 #+BEGIN_SRC emacs-lisp
-;;  (global-set-key (kbd "C-x C-b") 'ibuffer)
-;;  (global-set-key (kbd "C-x b") 'ido-switch-buffer)  
+  (global-set-key (kbd "C-x b") 'ibuffer)
+  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)  
 ;;  (defalias 'list-buffers 'ido-switch-buffer)  ;; from zamansky
 #+END_SRC
 *** always kill current buffer
@@ -156,6 +246,7 @@ Yasnippet settings
     :bind
     ([remap other-window] . switch-window))
 #+END_SRC
+
 *** window splittin
 #+BEGIN_SRC emacs-lisp
   (defun split-and-follow-horizontally ()
@@ -172,6 +263,7 @@ Yasnippet settings
     (other-window 1))
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
+
 *** scrollin
 #+BEGIN_SRC emacs-lisp
   (setq scroll-conservatively 100)
@@ -183,6 +275,7 @@ Yasnippet settings
     :ensure t
     :bind ("s-f e" . sudo-edit))
 #+END_SRC
+
 ** kill all buffers
 #+BEGIN_SRC emacs-lisp
   (defun kill-all-buffers ()
@@ -190,6 +283,7 @@ Yasnippet settings
     (mapc 'kill-buffer (buffer-list)))
   (global-set-key (kbd "C-M-s-k") 'kill-all-buffers)
 #+END_SRC
+
 ** dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
@@ -199,6 +293,7 @@ Yasnippet settings
     (setq dashboard-items '((recents . 15)))
     (setq dashboard-banner-logo-title "Hello UncleDave!"))
 #+END_SRC
+
 * convenient functions
 ** config edit
 #+BEGIN_SRC emacs-lisp
@@ -207,6 +302,7 @@ Yasnippet settings
     (find-file "~/.emacs.d/config.org"))
   (global-set-key (kbd "C-c e") 'config-visit)
 #+END_SRC
+
 ** config reload
 #+BEGIN_SRC emacs-lisp
   (defun config-reload()
@@ -214,6 +310,7 @@ Yasnippet settings
     (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
   (global-set-key (kbd "C-c r") 'config-reload)    
 #+END_SRC
+
 ** copy-whole-line
 #+BEGIN_SRC emacs-lisp
   (defun copy-whole-line ()
@@ -225,3 +322,13 @@ Yasnippet settings
 	(point-at-eol)))))
   (global-set-key (kbd "C-c w l") 'copy-whole-line)
 #+END_SRC
+
+** kill-whole-word function
+#+BEGIN_SRC  emacs-lisp
+  (defun kill-whole-word ()
+    (interactive)
+    (backward-word)
+    (kill-word 1))
+  (global-set-key (kbd "C-c w w") 'kill-whole-word)
+#+END_SRC
+
