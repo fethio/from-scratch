@@ -166,32 +166,41 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files
-    '("/home/fethi/snkr/org/gunluk.org" "/home/fethi/snkr/org/bilimsel.org" "/home/fethi/snkr/org/mesleki.org"))
+    '("/home/fethi/snkr/org/ajanda.kisisel" "/home/fethi/snkr/org/ajanda.bilimsel" "/home/fethi/snkr/org/ajanda.mesleki" "/home/fethi/snkr/org/ajanda.mudek"))
 #+END_SRC
 
 customizations from Rainer König
-** capture mode and templates
+** TODO capture mode and templates
 #+BEGIN_SRC emacs-lisp
- (global-set-key (kbd "<f6>") 'org-capture)
- (setq org-capture-templates
-   '(("b" "Bilimsel")
-     ("bj" "journal entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Journal")
-      (file "~/snkr/org/capture_journal")
-      :empty-lines-before 1)
-     ("bt" "TODO entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Capture")
-      (file "~/snkr/org/capture_todo")
-      :empty-lines-before 1)
-     ("m" "Mesleki")
-     ("mj" "journal entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Journal")
-      (file "~/snkr/org/capture_journal")
-      :empty-lines-before 1)
-     ("mt" "TODO entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Capture")
-      (file "~/snkr/org/capture_todo")
-      :empty-lines-before 1)))
+  (global-set-key (kbd "<f6>") 'org-capture)
+  (setq org-capture-templates
+    '(("b" "Bilimsel")
+      ("bj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("bt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("k" "Kişisel")
+      ("kj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.kisisel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("kt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("m" "Mesleki")
+      ("mj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("mt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)))
 #+END_SRC
 
 ** logging, drawer settings
