@@ -157,7 +157,26 @@ something like =ansi-term= for instance.
   (global-display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-
+* math stuff
+** maxima
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (use-package maxima
+    :config
+    (add-hook 'maxima-mode-hook 'my-maxima-mode-hook)
+    (add-hook 'maxima-inferior-mode-hook 'my-maxima-mode-hook)
+    ;; Define your custom function to be executed when entering maxima-mode
+    (defun my-maxima-mode-hook ()
+      (message "Maxima mode enabled! Do something here.")
+      ;; You can add more customizations or functions to be executed when entering Maxima mode
+      )
+    (setq
+     org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
+     maxima-display-maxima-buffer nil)
+    :mode ("\\.ma[cx]\\'" . maxima-mode)
+    :interpreter ("maxima" . maxima-mode)
+    )
+#+END_SRC
 * org mode stuff
 ** keybindings
 For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
