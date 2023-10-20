@@ -166,7 +166,7 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files
-    '("/home/fethi/snkr/org/gunluk.org" "/home/fethi/snkr/org/bilimsel.org" "/home/fethi/snkr/org/mesleki.org"))
+    '("/home/fethi/snkr/org/benimgunluk.org" "/home/fethi/snkr/org/bilimsel.gtd.org" "/home/fethi/snkr/org/mesleki.gtd.org" "/home/fethi/snkr/org/mudek.gtd.org"))
 #+END_SRC
 
 customizations from Rainer König
@@ -176,20 +176,20 @@ customizations from Rainer König
  (setq org-capture-templates
    '(("b" "Bilimsel")
      ("bj" "journal entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Journal")
+      (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
       (file "~/snkr/org/capture_journal")
       :empty-lines-before 1)
      ("bt" "TODO entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Capture")
+      (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
       (file "~/snkr/org/capture_todo")
       :empty-lines-before 1)
      ("m" "Mesleki")
      ("mj" "journal entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Journal")
+      (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
       (file "~/snkr/org/capture_journal")
       :empty-lines-before 1)
      ("mt" "TODO entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Capture")
+      (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
       (file "~/snkr/org/capture_todo")
       :empty-lines-before 1)))
 #+END_SRC
