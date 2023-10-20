@@ -189,7 +189,7 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files
-    '("/home/fethi/snkr/org/ajanda.kisisel" "/home/fethi/snkr/org/ajanda.bilimsel" "/home/fethi/snkr/org/ajanda.mesleki" "/home/fethi/snkr/org/ajanda.mudek"))
+    '("/home/fethi/snkr/org/ajanda.kisisel" "/home/fethi/snkr/org/ajanda.bilimsel" "/home/fethi/snkr/org/ajanda.mesleki"))
 #+END_SRC
 
 customizations from Rainer König
