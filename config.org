@@ -5,6 +5,8 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 #+TITLE: emacs cofiguration from scratch
 
+(load "server")
+(unless (server-running-p) (server-start))
 * dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
@@ -147,13 +149,34 @@ we have access to relative line numbering in programming-related modes.
 I highly recommend not enabling =linum-relative-mode= globally, as it messed up 
 something like =ansi-term= for instance.
 #+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
-    :ensure t
-    :config
-      (setq linum-relative-current-symbol "")
-      (add-hook 'prog-mode-hook 'linum-relative-mode))
+  ;;  (use-package linum-relative
+  ;;    :ensure t
+  ;;    :config
+  ;;      (setq linum-relative-current-symbol "")
+  ;;      (add-hook 'prog-mode-hook 'linum-relative-mode))
+  (global-display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-
+* math stuff
+** maxima
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (use-package maxima
+    :config
+    (add-hook 'maxima-mode-hook 'my-maxima-mode-hook)
+    (add-hook 'maxima-inferior-mode-hook 'my-maxima-mode-hook)
+    ;; Define your custom function to be executed when entering maxima-mode
+    (defun my-maxima-mode-hook ()
+      (message "Maxima mode enabled! Do something here.")
+      ;; You can add more customizations or functions to be executed when entering Maxima mode
+      )
+    (setq
+     org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
+     maxima-display-maxima-buffer nil)
+    :mode ("\\.ma[cx]\\'" . maxima-mode)
+    :interpreter ("maxima" . maxima-mode)
+    )
+#+END_SRC
 * org mode stuff
 ** keybindings
 For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
@@ -166,32 +189,41 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files
-    '("/home/fethi/snkr/org/gunluk.org" "/home/fethi/snkr/org/bilimsel.org" "/home/fethi/snkr/org/mesleki.org"))
+    '("/home/fethi/snkr/org/ajanda.kisisel" "/home/fethi/snkr/org/ajanda.bilimsel" "/home/fethi/snkr/org/ajanda.mesleki"))
 #+END_SRC
 
 customizations from Rainer König
-** capture mode and templates
+** TODO capture mode and templates
 #+BEGIN_SRC emacs-lisp
- (global-set-key (kbd "<f6>") 'org-capture)
- (setq org-capture-templates
-   '(("b" "Bilimsel")
-     ("bj" "journal entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Journal")
-      (file "~/snkr/org/capture_journal")
-      :empty-lines-before 1)
-     ("bt" "TODO entry" entry
-      (file+headline "~/snkr/org/bilimsel.org" "Capture")
-      (file "~/snkr/org/capture_todo")
-      :empty-lines-before 1)
-     ("m" "Mesleki")
-     ("mj" "journal entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Journal")
-      (file "~/snkr/org/capture_journal")
-      :empty-lines-before 1)
-     ("mt" "TODO entry" entry
-      (file+headline "~/snkr/org/mesleki.org" "Capture")
-      (file "~/snkr/org/capture_todo")
-      :empty-lines-before 1)))
+  (global-set-key (kbd "<f6>") 'org-capture)
+  (setq org-capture-templates
+    '(("b" "Bilimsel")
+      ("bj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("bt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("k" "Kişisel")
+      ("kj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.kisisel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("kt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("m" "Mesleki")
+      ("mj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("mt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)))
 #+END_SRC
 
 ** logging, drawer settings

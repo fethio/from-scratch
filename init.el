@@ -32,11 +32,16 @@
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
    '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" default))
+<<<<<<< HEAD
+ '(org-agenda-files '("/home/fethi/snkr/org/benimgunluk.org"))
+=======
+ '(org-agenda-files nil)
+>>>>>>> refs/remotes/origin/fethio/corax
  '(package-selected-packages
-   '(expand-region popup-kill-ring linum-relative mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
+   '(expand-region popup-kill-ring  mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#292b2e" :foreground "#b2b2b2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 112 :width normal :foundry "ADBO" :family "Source Code Pro")))))
