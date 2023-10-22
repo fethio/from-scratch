@@ -165,12 +165,14 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-files
-    '("/home/fethi/snkr/org/ajanda.kisisel" "/home/fethi/snkr/org/ajanda.bilimsel" "/home/fethi/snkr/org/ajanda.mesleki"))
+      (setq org-agenda-files
+	'("/home/fethi/snkr/org/ajanda.kisisel"
+	  "/home/fethi/snkr/org/ajanda.bilimsel"
+	  "/home/fethi/snkr/org/ajanda.mesleki"))
 #+END_SRC
 
 customizations from Rainer König
-** TODO capture mode and templates
+** capture mode and templates
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<f6>") 'org-capture)
   (setq org-capture-templates
@@ -278,6 +280,18 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
   (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
 
+
+* language modes
+** python
+   There will be a list of utilities to help with python programming
+   As a first choice, trying with elpy...
+*** elpy
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :ensure t
+    :init
+    (elpy-enable))
+#+END_SRC
 * Kill ring
 There is a lot of customization to the kill ring, and while I have not used it much before,
 I decided that it was time to change that.

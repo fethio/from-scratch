@@ -32,13 +32,9 @@
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
    '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" default))
-<<<<<<< HEAD
  '(org-agenda-files '("/home/fethi/snkr/org/benimgunluk.org"))
-=======
- '(org-agenda-files nil)
->>>>>>> refs/remotes/origin/fethio/corax
  '(package-selected-packages
-   '(expand-region popup-kill-ring linum-relative mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
+   '(elpy expand-region popup-kill-ring linum-relative mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
