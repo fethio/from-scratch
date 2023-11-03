@@ -3,9 +3,10 @@
 #+LANGUAGE: en
 #+OPTIONS: num:nil toc:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
-#+TITLE: emacs cofiguration from scratch
+#+TITLE: emacs configuration from scratch
 
-* dashboard
+* startup
+** dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
@@ -14,6 +15,12 @@
     (setq dashboard-items '((recents . 15)))
     (setq dashboard-banner-logo-title "Hello UncleDave!"))
 #+END_SRC
+** Enable emacs server
+Is the server started by the xinit process? do we really need the line below? Or should it be dome here?
+:PROPERTIES:
+#+begin_src emacs-lisp
+  (server-start)
+#+end_src
 * modeline
 * interface settings
 ** startup settings
@@ -279,7 +286,6 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
     (mapc 'kill-buffer (buffer-list)))
   (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
-
 
 * language modes
 ** python
