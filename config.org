@@ -7,6 +7,7 @@
 
 * startup
 ** dashboard
+enable emacs dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
@@ -19,8 +20,9 @@
 :PROPERTIES:
 Is the server started by the xinit process? do we really need the line below? Or should it be dome here?
 #+begin_src emacs-lisp
-  (server-start)
-#+end_src
+   (load "server")
+  (unless (server-running-p) (server-start))
+  #+end_src
 
 ** edit as sudo
 #+BEGIN_SRC emacs-lisp
@@ -230,13 +232,34 @@ we have access to relative line numbering in programming-related modes.
 I highly recommend not enabling =linum-relative-mode= globally, as it messed up 
 something like =ansi-term= for instance.
 #+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
-    :ensure t
-    :config
-      (setq linum-relative-current-symbol "")
-      (add-hook 'prog-mode-hook 'linum-relative-mode))
+  ;;  (use-package linum-relative
+  ;;    :ensure t
+  ;;    :config
+  ;;      (setq linum-relative-current-symbol "")
+  ;;      (add-hook 'prog-mode-hook 'linum-relative-mode))
+  (global-display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-
+* math stuff
+** maxima
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+  (use-package maxima
+    :config
+    (add-hook 'maxima-mode-hook 'my-maxima-mode-hook)
+    (add-hook 'maxima-inferior-mode-hook 'my-maxima-mode-hook)
+    ;; Define your custom function to be executed when entering maxima-mode
+    (defun my-maxima-mode-hook ()
+      (message "Maxima mode enabled! Do something here.")
+      ;; You can add more customizations or functions to be executed when entering Maxima mode
+      )
+    (setq
+     org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
+     maxima-display-maxima-buffer nil)
+    :mode ("\\.ma[cx]\\'" . maxima-mode)
+    :interpreter ("maxima" . maxima-mode)
+    )
+#+END_SRC
 * org mode stuff
 ** keybindings
 For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
