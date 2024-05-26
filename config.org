@@ -362,14 +362,6 @@ customizations from Rainer König
  (setq org-refile-use-outline-path 'file)
 #+END_SRC
 
-** bullets
-Pretty bullets using org-bullets
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :ensure t
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC
 * buffers and windows
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
