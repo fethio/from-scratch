@@ -303,6 +303,73 @@ Yasnippet settings
 #+END_SRC
 
 * org mode
+** keybindings
+For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
+#+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-c l") #'org-store-link)
+   (global-set-key (kbd "C-c a") #'org-agenda)
+   (global-set-key (kbd "C-c c") #'org-capture)
+#+END_SRC
+
+** agenda files
+#+BEGIN_SRC emacs-lisp
+      (setq org-agenda-files
+	'("/home/fethi/snkr/org/ajanda.kisisel"
+	  "/home/fethi/snkr/org/ajanda.bilimsel"
+	  "/home/fethi/snkr/org/ajanda.mesleki"))
+#+END_SRC
+
+customizations from Rainer König
+** capture mode and templates
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f6>") 'org-capture)
+  (setq org-capture-templates
+    '(("b" "Bilimsel")
+      ("bj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("bt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("k" "Kişisel")
+      ("kj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.kisisel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("kt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("m" "Mesleki")
+      ("mj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("mt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)))
+#+END_SRC
+
+** logging, drawer settings
+#+BEGIN_SRC emacs-lisp
+ (setq org-log-into-drawer t)
+ (setq org-log-reschedule 'note)
+ (setq org-refile-allow-creating-parent-nodes 'confirm)
+ (setq org-refile-targets '((org-agenda-files :level . 1)))
+ (setq org-refile-use-outline-path 'file)
+#+END_SRC
+
+** bullets
+Pretty bullets using org-bullets
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
 * buffers and windows
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
