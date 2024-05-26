@@ -149,28 +149,28 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
   (use-package avy
     :ensure t
     :bind
-      ("M-s" . avy-goto-char))
+    ("M-s" . avy-goto-char))
 #+END_SRC
 
 ** auto-completion (company)
-  This is from deadreth
+This is from deadreth
 #+BEGIN_SRC emacs-lisp
   ;;  (use-package company
   ;;    :ensure t
   ;;    :init
   ;;    (add-hook 'after-init-hook 'global-company-mode))
-    (use-package company
+  (use-package company
     :ensure t
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 3))
 
-    (with-eval-after-load 'company
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (define-key company-active-map (kbd "SPC") #'company-abort))
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "SPC") #'company-abort))
 
   (add-hook 'c++-mode-hook 'yas-minor-mode)
   (add-hook 'c-mode-hook 'yas-minor-mode)
@@ -187,8 +187,8 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     :ensure t
     :config
     (setq company-backends '((company-c-headers
-			      company-dabbrev-code
-			      company-irony))))
+                              company-dabbrev-code
+                              company-irony))))
 
   (use-package irony
     :ensure t
@@ -198,31 +198,31 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
   (add-hook 'python-mode-hook 'yas-minor-mode)
-    (add-hook 'python-mode-hook 'flycheck-mode)
+  (add-hook 'python-mode-hook 'flycheck-mode)
 
-    (with-eval-after-load 'company
-	(add-hook 'python-mode-hook 'company-mode))
+  (with-eval-after-load 'company
+    (add-hook 'python-mode-hook 'company-mode))
 
-    (use-package company-jedi
-      :ensure t
-      :config
-	(require 'company)
-	(add-to-list 'company-backends 'company-jedi))
+  (use-package company-jedi
+    :ensure t
+    :config
+    (require 'company)
+    (add-to-list 'company-backends 'company-jedi))
 
-    (defun python-mode-company-init ()
-      (setq-local company-backends '((company-jedi
-				      company-etags))))
-(use-package company-shell
-  :ensure t
-  :config
+  (defun python-mode-company-init ()
+    (setq-local company-backends '((company-jedi
+                                    company-etags))))
+  (use-package company-shell
+    :ensure t
+    :config
     (require 'company)
     (add-hook 'shell-mode-hook 'shell-mode-company-init))
 
-(defun shell-mode-company-init ()
-  (setq-local company-backends '((company-shell
-                                  company-shell-env
-                                  company-etags
-                                  company-dabbrev-code))))
+  (defun shell-mode-company-init ()
+    (setq-local company-backends '((company-shell
+                                    company-shell-env
+                                    company-etags
+                                    company-dabbrev-code))))
 #+END_SRC
 
 ** line numbers and programming
@@ -241,7 +241,8 @@ something like =ansi-term= for instance.
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 * math stuff
-** maxima
+* maxima
+imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
   (use-package maxima
@@ -260,97 +261,53 @@ something like =ansi-term= for instance.
     :interpreter ("maxima" . maxima-mode)
     )
 #+END_SRC
-* org mode stuff
-** keybindings
-For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
-#+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-c l") #'org-store-link)
-   (global-set-key (kbd "C-c a") #'org-agenda)
-   (global-set-key (kbd "C-c c") #'org-capture)
-#+END_SRC
+The following lines were commented out (to see whether if things are right without them)
+(autoload 'maxima-mode "maxima" "Maxima mode" t)
+(autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t) ;;
+(autoload 'maxima "maxima" "Maxima interaction" t)
+(autoload 'imath-mode "imath" "Imath mode for math formula input" t) ;;
+(setq imaxima-use-maxima-mode-flag t) ;;
+(add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 
-** agenda files
+* latex
 #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-files
-	'("/home/fethi/snkr/org/ajanda.kisisel"
-	  "/home/fethi/snkr/org/ajanda.bilimsel"
-	  "/home/fethi/snkr/org/ajanda.mesleki"))
+  (use-package tex
+    :ensure auctex
+    :defer t
+    :hook (LaTeX-mode . LaTeX-math-mode)
+    :config
+    ;; Enable PDF mode
+    (setq TeX-PDF-mode t)
+    ;; Enable synctex correlation
+    (setq TeX-source-correlate-mode t)
+    (setq TeX-source-correlate-start-server t)
+    ;; Use the default viewer
+    (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+    ;; Enable auto-saving and parsing of documents
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    ;; Enable reftex
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    ;; Keybinding for compiling
+    (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
+    (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+    )
 #+END_SRC
-
-customizations from Rainer König
-** capture mode and templates
+** PDF Tools Configuration
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f6>") 'org-capture)
-  (setq org-capture-templates
-    '(("b" "Bilimsel")
-      ("bj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("bt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("k" "Kişisel")
-      ("kj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.kisisel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("kt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("m" "Mesleki")
-      ("mj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("mt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)))
-#+END_SRC
-
-** logging, drawer settings
-#+BEGIN_SRC emacs-lisp
- (setq org-log-into-drawer t)
- (setq org-log-reschedule 'note)
- (setq org-refile-allow-creating-parent-nodes 'confirm)
- (setq org-refile-targets '((org-agenda-files :level . 1)))
- (setq org-refile-use-outline-path 'file)
-#+END_SRC
-
-** bullets
-Pretty bullets using org-bullets
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
+  (use-package pdf-tools
     :ensure t
     :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    ;; Initialize pdf-tools
+    (pdf-tools-install)
+    ;; Disable line numbers in pdf-view-mode
+    (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
+    )
 #+END_SRC
 
-** yasnippet stuff
-Yasnippet settings
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-      :ensure t
-      :config
-      (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-      (yas-global-mode 1))
-#+END_SRC
-
-** reveal.js stuff
-#+BEGIN_SRC elisp
-(use-package ox-reveal
-  :ensure ox-reveal)
-
-(setq org-reveal-root "file:///home/fethi/software/reveal.js")
-(setq org-reveal-mathjax t)
-
-(use-package htmlize
-  :ensure t)
-#+END_SRC
-
+* org mode
 * buffers and windows
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
@@ -368,20 +325,20 @@ Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for
 ** Kill buffers without asking for confirmation
 Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
 #+BEGIN_SRC emacs-lisp
-(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
 
 ** Turn switch-to-buffer into ibuffer
 I don't understand how ibuffer isn't the default option by now.
 It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x b") 'ibuffer)
+  (global-set-key (kbd "C-x b") 'ibuffer)
 #+END_SRC
 
 ** expert-mode
 If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
 #+BEGIN_SRC emacs-lisp
-(setq ibuffer-expert t)
+  (setq ibuffer-expert t)
 #+END_SRC
 
 ** close-all-buffers
@@ -399,24 +356,24 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
 #+END_SRC
 
 * language modes
-   From deadreth
+From deadreth
 #+BEGIN_SRC emacs-lisp
-     (add-hook 'org-mode-hook
-	       '(lambda ()
-		  (visual-line-mode 1)))
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (visual-line-mode 1)))
 
-     (global-set-key (kbd "C-c '") 'org-edit-src-code)
+  (global-set-key (kbd "C-c '") 'org-edit-src-code)
 
-   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-   (add-hook 'emacs-lisp-mode-hook 'company-mode)
-(setq org-ellipsis " ")
-(setq org-src-fontify-natively t)
-(setq org-src-tab-acts-natively t)
-(setq org-confirm-babel-evaluate nil)
-(setq org-export-with-smart-quotes t)
-(setq org-src-window-setup 'current-window)
-(add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (setq org-ellipsis " ")
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-export-with-smart-quotes t)
+  (setq org-src-window-setup 'current-window)
+  (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 
 ** flycheck
@@ -425,11 +382,11 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
     :ensure t)
 
   (use-package flycheck-clang-analyzer
-  :ensure t
-  :config
-  (with-eval-after-load 'flycheck
-    (require 'flycheck-clang-analyzer)
-     (flycheck-clang-analyzer-setup)))
+    :ensure t
+    :config
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
 
 #+end_src
 
@@ -460,17 +417,6 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
     :init
     (elpy-enable))
 #+END_SRC
-** maxima
-   imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
-#+begin_src emacs-lisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-  (autoload 'maxima-mode "maxima" "Maxima mode" t)
-  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t) ;;
-  (autoload 'maxima "maxima" "Maxima interaction" t)
-  (autoload 'imath-mode "imath" "Imath mode for math formula input" t) ;;
-  (setq imaxima-use-maxima-mode-flag t) ;;
-  (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
-#+end_src
 
 * Kill ring
 There is a lot of customization to the kill ring, and while I have not used it much before,
