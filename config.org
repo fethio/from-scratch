@@ -170,13 +170,8 @@ This is from deadreth
     (define-key company-active-map (kbd "M-p") nil)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort))
-
-  (add-hook 'c++-mode-hook 'yas-minor-mode)
-  (add-hook 'c-mode-hook 'yas-minor-mode)
-
-
-  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "SPC") #'company-abort)
+    (add-hook 'python-mode-hook 'company-mode)
     (add-hook 'c++-mode-hook 'company-mode)
     (add-hook 'c-mode-hook 'company-mode))
 
@@ -196,12 +191,6 @@ This is from deadreth
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-  (add-hook 'python-mode-hook 'yas-minor-mode)
-  (add-hook 'python-mode-hook 'flycheck-mode)
-
-  (with-eval-after-load 'company
-    (add-hook 'python-mode-hook 'company-mode))
 
   (use-package company-jedi
     :ensure t
@@ -264,7 +253,6 @@ something like =ansi-term= for instance.
     ;; Keybinding for compiling
     (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
     )
 #+END_SRC
 ** PDF Tools Configuration
@@ -420,6 +408,9 @@ From deadreth
 
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+  (add-hook 'c++-mode-hook 'yas-minor-mode)
+  (add-hook 'python-mode-hook 'yas-minor-mode)
+  (add-hook 'c-mode-hook 'yas-minor-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (setq org-ellipsis " ")
   (setq org-src-fontify-natively t)
@@ -497,6 +488,8 @@ this section provided by openai but needs to debugging, some functions do not wo
       (require 'flycheck-clang-analyzer)
       (flycheck-clang-analyzer-setup)))
 
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'python-mode-hook 'flycheck-mode)
 #+end_src
 
 ** git integration
@@ -607,13 +600,29 @@ The default is 60, I personally need more sometimes.
 #+END_SRC
 
 ** popup-kill-ring
+(alternative browse-kill-ring)
 Out of all the packages I tried out, this one, being the simplest, appealed to me most.
 With a simple M-y you can now browse your kill-ring like browsing autocompletion items.
 C-n and C-p totally work for this.
 #+BEGIN_SRC emacs-lisp
+  (require 'popup)
+  (require 'pos-tip)
+
   (use-package popup-kill-ring
     :ensure t
-    :bind ("M-y" . popup-kill-ring))
+    :bind ("M-y" . popup-kill-ring)
+    :config
+    (with-eval-after-load 'popup
+      (define-key popup-kill-ring-keymap (kbd "C-n") 'popup-next)
+      (define-key popup-kill-ring-keymap (kbd "C-p") 'popup-previous)))
+ ;;  (setq popup-kill-ring-interactive-insert t)
+  ;;  (use-package browse-kill-ring
+  ;;    :ensure t
+  ;;    :bind ("M-y" . browse-kill-ring)
+  ;;    :config
+  ;;    (setq browse-kill-ring-separator "\f")
+  ;;    (setq browse-kill-ring-highlight-current-entry t)
+  ;;    (setq browse-kill-ring-separator-face 'bold))
 #+END_SRC
 
 * convenient functions
