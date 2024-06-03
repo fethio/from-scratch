@@ -13,6 +13,7 @@
 # other stuff
 bookmarks
 elpa/
+org-persist/
 ido.last
 recentf
 smex-items

@@ -1,3 +1,5 @@
+
+
 #+STARTUP: overview
 #+CREATOR: fethi okyar
 #+LANGUAGE: en
@@ -302,9 +304,9 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
       (setq org-agenda-files
-	'("/home/fethi/snkr/org/ajanda.kisisel"
-	  "/home/fethi/snkr/org/ajanda.bilimsel"
-	  "/home/fethi/snkr/org/ajanda.mesleki"))
+	'("/Users/fethiokyar/snkr/org/ajanda.kisisel"
+	  "/Users/fethiokyar/snkr/org/ajanda.bilimsel"
+	  "/Users/fethiokyar/snkr/org/ajanda.mesleki"))
 #+END_SRC
 
 customizations from Rainer König
@@ -605,8 +607,8 @@ Out of all the packages I tried out, this one, being the simplest, appealed to m
 With a simple M-y you can now browse your kill-ring like browsing autocompletion items.
 C-n and C-p totally work for this.
 #+BEGIN_SRC emacs-lisp
-  (require 'popup)
-  (require 'pos-tip)
+ ;; (require 'popup)
+ ;; (require 'pos-tip)
 
   (use-package popup-kill-ring
     :ensure t
