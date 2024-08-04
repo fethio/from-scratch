@@ -20,16 +20,16 @@ enable emacs dashboard
 :PROPERTIES:
 Is the server started by the xinit process? do we really need the line below? Or should it be dome here?
 #+begin_src emacs-lisp
-   (load "server")
+  (load "server")
   (unless (server-running-p) (server-start))
-  #+end_src
+#+end_src
 
 ** edit as sudo
 #+BEGIN_SRC emacs-lisp
-(use-package sudo-edit
-  :ensure t
-  :bind
-  ("s-e" . sudo-edit))
+  (use-package sudo-edit
+    :ensure t
+    :bind
+    ("s-e" . sudo-edit))
 #+END_SRC
 
 * modeline
@@ -57,14 +57,14 @@ Is the server started by the xinit process? do we really need the line below? Or
 *** electric paranthesis
 #+BEGIN_SRC emacs-lisp
   (setq electric-pairs '(
-			 (?\( . ?\))
-			 (?\[ . ?\])
-			 ))
+                         (?\( . ?\))
+                         (?\[ . ?\])
+                         ))
   (electric-pair-mode t)
 #+END_SRC
 
 ** terminal stuff
- ansi term uses zsh
+ansi term uses zsh
 #+BEGIN_SRC emacs-lisp
   (defvar my-term-shell "/bin/zsh")
   (defadvice ansi-term (before force-bash)
@@ -232,6 +232,7 @@ something like =ansi-term= for instance.
 * math stuff
 * latex
 #+BEGIN_SRC emacs-lisp
+
   (use-package tex
     :ensure auctex
     :defer t
@@ -252,8 +253,12 @@ something like =ansi-term= for instance.
     (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
     ;; Keybinding for compiling
     (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
+    (define-key LaTeX-mode-map (kbd "C-c C-v") 'TeX-view)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
     )
+  (use-package auctex
+    :ensure t
+    :defer t)
 #+END_SRC
 ** PDF Tools Configuration
 #+BEGIN_SRC emacs-lisp
@@ -301,10 +306,12 @@ For a better experience, the three Org commands org-store-link, org-capture and 
 
 ** agenda files
 #+BEGIN_SRC emacs-lisp
-      (setq org-agenda-files
-	'("/home/fethi/snkr/org/ajanda.kisisel"
-	  "/home/fethi/snkr/org/ajanda.bilimsel"
-	  "/home/fethi/snkr/org/ajanda.mesleki"))
+    (setq org-agenda-files
+      '("/home/fethi/snkr/org/ajanda.kisisel"
+        "/home/fethi/snkr/org/ajanda.bilimsel"
+        "/home/fethi/snkr/org/ajanda.mesleki"
+        "/home/fethi/snkr/org/gunce.bilimsel"
+        "/home/fethi/snkr/org/gunce.mesleki"))
 #+END_SRC
 
 customizations from Rainer König
@@ -323,7 +330,7 @@ customizations from Rainer König
        :empty-lines-before 1)
       ("k" "Kişisel")
       ("kj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.kisisel" "Capture")
+       (file+headline "~/snkr/org/gunce.kisisel" "Capture")
        (file "~/snkr/org/capture_journal")
        :empty-lines-before 1)
       ("kt" "TODO entry" entry
@@ -332,7 +339,7 @@ customizations from Rainer König
        :empty-lines-before 1)
       ("m" "Mesleki")
       ("mj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.mesleki" "Capture")
+       (file+headline "~/snkr/org/gunce.mesleki" "Capture")
        (file "~/snkr/org/capture_journal")
        :empty-lines-before 1)
       ("mt" "TODO entry" entry
