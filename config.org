@@ -229,36 +229,42 @@ something like =ansi-term= for instance.
   (global-display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
+** emacspeak
+#+BEGIN_SRC emacs-lisp
+  ;;  (load-file "~/software/emacspeak-master/lisp/emacspeak-setup.el")
+#+END_SRC
 * math stuff
 * latex
 #+BEGIN_SRC emacs-lisp
-
-  (use-package tex
-    :ensure auctex
-    :defer t
-    :hook (LaTeX-mode . LaTeX-math-mode)
-    :config
-    ;; Enable PDF mode
-    (setq TeX-PDF-mode t)
-    ;; Enable synctex correlation
-    (setq TeX-source-correlate-mode t)
-    (setq TeX-source-correlate-start-server t)
-    ;; Use the default viewer
-    (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-    ;; Enable auto-saving and parsing of documents
-    (setq TeX-auto-save t)
-    (setq TeX-parse-self t)
-    ;; Enable reftex
-    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-    ;; Keybinding for compiling
-    (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
-    (define-key LaTeX-mode-map (kbd "C-c C-v") 'TeX-view)
-    (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-    )
-  (use-package auctex
-    :ensure t
-    :defer t)
+      (use-package tex
+        :ensure auctex
+        :defer t
+        :hook (LaTeX-mode . LaTeX-math-mode)
+        :init
+        ;; Enable auto-saving and parsing of documents
+        (setq TeX-auto-save t)
+        (setq TeX-parse-self t)
+        :config
+        ;; Enable PDF mode
+        (setq TeX-PDF-mode t)
+        ;; Enable synctex correlation
+        (setq TeX-source-correlate-mode t)
+        (setq TeX-source-correlate-start-server t)
+        ;; Use the default viewer
+        (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+              TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+        ;; Enable reftex
+        (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+        ;; Keybinding for compiling
+        (with-eval-after-load 'latex
+        (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
+        (define-key LaTeX-mode-map (kbd "C-c C-v") 'TeX-view))
+  
+        (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+        )
+      (use-package auctex
+        :ensure t
+        :defer t)
 #+END_SRC
 ** PDF Tools Configuration
 #+BEGIN_SRC emacs-lisp
@@ -294,7 +300,6 @@ Yasnippet settings
   (use-package htmlize
     :ensure t)
 #+END_SRC
-
 * org mode
 ** keybindings
 For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
@@ -404,6 +409,11 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
   (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
 
+** save buffers for next session
+This was added in order to enable rocovery of buffers from the previous session (use M-x recover-session)
+#+BEGIN_SRC emacs-lisp
+ (setq save-some-buffers-kill-terminal 'kill)
+#+END_SRC
 * language modes
 From deadreth
 #+BEGIN_SRC emacs-lisp
