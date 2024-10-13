@@ -365,7 +365,9 @@ customizations from Rainer König
 * buffers and windows
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
-
+#+BEGIN_SRC emacs-lisp
+     (desktop-save-mode 1)
+#+END_SRC
 ** Always murder current buffer
 Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
 #+BEGIN_SRC emacs-lisp

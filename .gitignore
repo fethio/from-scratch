@@ -11,6 +11,7 @@
 *.~undo-tree
 
 # other stuff
+tutorial
 bookmarks
 elpa/
 ido.last
@@ -22,4 +23,5 @@ config.el
 
 # Session related stuff
 session.*
+.emacs.desktop*
 \#*
