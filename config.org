@@ -315,6 +315,7 @@ For a better experience, the three Org commands org-store-link, org-capture and 
       '("/home/fethi/snkr/org/ajanda.kisisel"
         "/home/fethi/snkr/org/ajanda.bilimsel"
         "/home/fethi/snkr/org/ajanda.mesleki"
+        "/home/fethi/snkr/org/gunce.kisisel"
         "/home/fethi/snkr/org/gunce.bilimsel"
         "/home/fethi/snkr/org/gunce.mesleki"))
 #+END_SRC
