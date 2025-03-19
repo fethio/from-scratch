@@ -537,6 +537,9 @@ this section provided by openai but needs to debugging, some functions do not wo
   (use-package elpy
     :ensure t
     :init
+    (advice-add 'python-mode :before 'elpy-enable)
+    ;; (with-eval-after-load 'python
+    ;;  (require 'python))
     (elpy-enable))
 #+END_SRC
 

@@ -6,6 +6,7 @@
 
 # Backup files
 *~
+.#*
 
 # Undo-tree save-files
 *.~undo-tree
@@ -19,7 +20,10 @@ recentf
 smex-items
 # snippets/
 tramp
+eshell/
+eln-cache/
 config.el
+.org-id-locations
 
 # Session related stuff
 session.*
