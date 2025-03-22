@@ -542,6 +542,7 @@ this section provided by openai but needs to debugging, some functions do not wo
     ;;  (require 'python))
     (elpy-enable))
 #+END_SRC
+(setq elpy-rpc-virtualenv-path 'current)
 
 ** maxima
 imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
