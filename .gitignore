@@ -19,7 +19,12 @@ smex-items
 # snippets/
 tramp
 config.el
+init.el
 
 # Session related stuff
 session.*
 \#*
+tutorial/
+eshell/
+eln-cache/
+.emacs.desktop*

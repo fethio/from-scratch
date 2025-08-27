@@ -20,10 +20,15 @@
 * interface settings
 ** startup settings
 #+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq inhibit-startup-message t)
 #+END_SRC
+
+#+RESULTS:
+: t
+
 ** cursor motion, etc
 *** highlighting, beacon
 #+BEGIN_SRC emacs-lisp
