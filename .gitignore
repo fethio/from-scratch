@@ -11,6 +11,7 @@
 *.~undo-tree
 
 # other stuff
+tutorial
 bookmarks
 elpa/
 ido.last
