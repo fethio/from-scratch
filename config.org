@@ -226,8 +226,9 @@ something like =ansi-term= for instance.
   ;;    :config
   ;;      (setq linum-relative-current-symbol "")
   ;;      (add-hook 'prog-mode-hook 'linum-relative-mode))
-  (global-display-line-numbers-mode)
+  ;; (global-display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  ;; (add-hook 'after-init-hook (lambda () (global-display-line-numbers-mode t)))
 #+END_SRC
 ** emacspeak
 #+BEGIN_SRC emacs-lisp
@@ -276,6 +277,7 @@ something like =ansi-term= for instance.
     ;; Disable line numbers in pdf-view-mode
     (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
     )
+;;  (setq pdf-view-incompatible-modes '(display-line-numbers-mode))
 #+END_SRC
 
 ** yasnippet stuff
