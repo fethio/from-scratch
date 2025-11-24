@@ -33,6 +33,60 @@ Is the server started by the xinit process? do we really need the line below? Or
 #+END_SRC
 
 * modeline
+* buffers and windows
+Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
+Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
+#+BEGIN_SRC emacs-lisp
+     (desktop-save-mode 1)
+#+END_SRC
+** Always murder current buffer
+Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
+#+BEGIN_SRC emacs-lisp
+  (defun kill-current-buffer ()
+    "Kills the current buffer."
+    (interactive)
+    (kill-buffer (current-buffer)))
+  (global-set-key (kbd "C-x k") 'kill-current-buffer)
+#+END_SRC
+
+** Kill buffers without asking for confirmation
+Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
+#+BEGIN_SRC emacs-lisp
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+#+END_SRC
+
+** Turn switch-to-buffer into ibuffer
+I don't understand how ibuffer isn't the default option by now.
+It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x b") 'ibuffer)
+#+END_SRC
+
+** expert-mode
+If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
+#+BEGIN_SRC emacs-lisp
+  (setq ibuffer-expert t)
+#+END_SRC
+
+** close-all-buffers
+It's one of those things where I genuinely have to wonder why there is no built in functionality for it.
+Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I'd need to spend a few too many
+seconds doing this than I'd like, here's a solution.
+
+This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it unless you really want to.
+#+BEGIN_SRC emacs-lisp
+  (defun close-all-buffers ()
+    "Kill all buffers without regard for their origin."
+    (interactive)
+    (mapc 'kill-buffer (buffer-list)))
+  (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
+#+END_SRC
+
+** save buffers for next session
+This was added in order to enable rocovery of buffers from the previous session (use M-x recover-session)
+#+BEGIN_SRC emacs-lisp
+ (setq save-some-buffers-kill-terminal 'kill)
+#+END_SRC
 * interface settings
 ** startup settings
 #+BEGIN_SRC emacs-lisp
@@ -239,7 +293,78 @@ something like =ansi-term= for instance.
 #+BEGIN_SRC emacs-lisp
   ;;  (load-file "~/software/emacspeak-master/lisp/emacspeak-setup.el")
 #+END_SRC
-* math stuff
+* org mode
+** keybindings
+For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
+#+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-c l") #'org-store-link)
+   (global-set-key (kbd "C-c a") #'org-agenda)
+   (global-set-key (kbd "C-c c") #'org-capture)
+#+END_SRC
+
+** agenda files
+#+BEGIN_SRC emacs-lisp
+    (setq org-agenda-files
+      '("/home/fethi/snkr/org/ajanda.kisisel"
+        "/home/fethi/snkr/org/ajanda.bilimsel"
+        "/home/fethi/snkr/org/ajanda.mesleki"
+        "/home/fethi/snkr/org/gunce.kisisel"
+        "/home/fethi/snkr/org/gunce.bilimsel"
+        "/home/fethi/snkr/org/gunce.mesleki"))
+#+END_SRC
+
+customizations from Rainer König
+** capture mode and templates
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f6>") 'org-capture)
+  (setq org-capture-templates
+    '(("b" "Bilimsel")
+      ("bj" "journal entry" entry
+       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("bt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("k" "Kişisel")
+      ("kj" "journal entry" entry
+       (file+headline "~/snkr/org/gunce.kisisel" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("kt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)
+      ("m" "Mesleki")
+      ("mj" "journal entry" entry
+       (file+headline "~/snkr/org/gunce.mesleki" "Capture")
+       (file "~/snkr/org/capture_journal")
+       :empty-lines-before 1)
+      ("mt" "TODO entry" entry
+       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
+       (file "~/snkr/org/capture_todo")
+       :empty-lines-before 1)))
+#+END_SRC
+
+** logging, drawer settings
+#+BEGIN_SRC emacs-lisp
+ (setq org-log-into-drawer t)
+ (setq org-log-reschedule 'note)
+ (setq org-refile-allow-creating-parent-nodes 'confirm)
+ (setq org-refile-targets '((org-agenda-files :level . 1)))
+ (setq org-refile-use-outline-path 'file)
+#+END_SRC
+** org-babel
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((maxima . t)
+     (octave . t)
+     (python . t)
+     (shell . t)))
+#+end_src
+
 * latex
 #+BEGIN_SRC emacs-lisp
       (use-package tex
@@ -306,123 +431,6 @@ Yasnippet settings
 
   (use-package htmlize
     :ensure t)
-#+END_SRC
-* org mode
-** keybindings
-For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
-#+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-c l") #'org-store-link)
-   (global-set-key (kbd "C-c a") #'org-agenda)
-   (global-set-key (kbd "C-c c") #'org-capture)
-#+END_SRC
-
-** agenda files
-#+BEGIN_SRC emacs-lisp
-    (setq org-agenda-files
-      '("/home/fethi/snkr/org/ajanda.kisisel"
-        "/home/fethi/snkr/org/ajanda.bilimsel"
-        "/home/fethi/snkr/org/ajanda.mesleki"
-        "/home/fethi/snkr/org/gunce.kisisel"
-        "/home/fethi/snkr/org/gunce.bilimsel"
-        "/home/fethi/snkr/org/gunce.mesleki"))
-#+END_SRC
-
-customizations from Rainer König
-** capture mode and templates
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f6>") 'org-capture)
-  (setq org-capture-templates
-    '(("b" "Bilimsel")
-      ("bj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("bt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("k" "Kişisel")
-      ("kj" "journal entry" entry
-       (file+headline "~/snkr/org/gunce.kisisel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("kt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("m" "Mesleki")
-      ("mj" "journal entry" entry
-       (file+headline "~/snkr/org/gunce.mesleki" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("mt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)))
-#+END_SRC
-
-** logging, drawer settings
-#+BEGIN_SRC emacs-lisp
- (setq org-log-into-drawer t)
- (setq org-log-reschedule 'note)
- (setq org-refile-allow-creating-parent-nodes 'confirm)
- (setq org-refile-targets '((org-agenda-files :level . 1)))
- (setq org-refile-use-outline-path 'file)
-#+END_SRC
-
-* buffers and windows
-Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
-Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
-#+BEGIN_SRC emacs-lisp
-     (desktop-save-mode 1)
-#+END_SRC
-** Always murder current buffer
-Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
-#+BEGIN_SRC emacs-lisp
-  (defun kill-current-buffer ()
-    "Kills the current buffer."
-    (interactive)
-    (kill-buffer (current-buffer)))
-  (global-set-key (kbd "C-x k") 'kill-current-buffer)
-#+END_SRC
-
-** Kill buffers without asking for confirmation
-Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
-#+BEGIN_SRC emacs-lisp
-  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
-#+END_SRC
-
-** Turn switch-to-buffer into ibuffer
-I don't understand how ibuffer isn't the default option by now.
-It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
-#+END_SRC
-
-** expert-mode
-If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
-#+BEGIN_SRC emacs-lisp
-  (setq ibuffer-expert t)
-#+END_SRC
-
-** close-all-buffers
-It's one of those things where I genuinely have to wonder why there is no built in functionality for it.
-Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I'd need to spend a few too many
-seconds doing this than I'd like, here's a solution.
-
-This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it unless you really want to.
-#+BEGIN_SRC emacs-lisp
-  (defun close-all-buffers ()
-    "Kill all buffers without regard for their origin."
-    (interactive)
-    (mapc 'kill-buffer (buffer-list)))
-  (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
-#+END_SRC
-
-** save buffers for next session
-This was added in order to enable rocovery of buffers from the previous session (use M-x recover-session)
-#+BEGIN_SRC emacs-lisp
- (setq save-some-buffers-kill-terminal 'kill)
 #+END_SRC
 * language modes
 From deadreth
@@ -546,7 +554,14 @@ this section provided by openai but needs to debugging, some functions do not wo
     :init
     (elpy-enable))
 #+END_SRC
-
+** markdown
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode)
+  :init (setq markdown-command "pandoc"))
+#+END_SRC
+* math modes
 ** maxima
 imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
 #+BEGIN_SRC emacs-lisp
@@ -575,7 +590,20 @@ The following lines were commented out (to see whether if things are right witho
 (setq imaxima-use-maxima-mode-flag t) ;;
 (add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 
-** Octave
+#+begin_src maxima :results output
+  programmode: false;
+  eq: x^2 - 16 = 0;
+  solution: solve(eq, x);
+  print(solution);
+#+end_src   
+
+#+RESULTS:
+: solve: solution:
+:                                     x = - 4
+:                                      x = 4
+: [%t1, %t2] 
+
+** octave
 configuration provided by openai
 #+BEGIN_SRC emacs-lisp
   (use-package octave
