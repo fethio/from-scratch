@@ -1,4 +1,4 @@
-#+STARTUP: overview
+ma#+STARTUP: overview
 #+CREATOR: fethi okyar
 #+LANGUAGE: en
 #+OPTIONS: num:nil toc:nil
@@ -567,20 +567,13 @@ imaxima seems to be the choice offered by openai but does not exist in melpa. us
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
   (use-package maxima
-    :config
-    (add-hook 'maxima-mode-hook 'my-maxima-mode-hook)
-    (add-hook 'maxima-inferior-mode-hook 'my-maxima-mode-hook)
-    ;; Define your custom function to be executed when entering maxima-mode
-    (defun my-maxima-mode-hook ()
-      (message "Maxima mode enabled! Do something here.")
-      ;; You can add more customizations or functions to be executed when entering Maxima mode
-      )
-    (setq
-     org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
-     maxima-display-maxima-buffer nil)
-    :mode ("\\.ma[cx]\\'" . maxima-mode)
-    :interpreter ("maxima" . maxima-mode)
-    )
+    :init
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
+  	  maxima-display-maxima-buffer nil)
+    (add-to-list 'auto-mode-alist
+  		 (cons "\\.mac\\'" 'maxima-mode))
+    (add-to-list 'interpreter-mode-alist
+  		 (cons "maxima" 'maxima-mode)))
 #+END_SRC
 The following lines were commented out (to see whether if things are right without them)
 (autoload 'maxima-mode "maxima" "Maxima mode" t)

@@ -38,9 +38,9 @@
 	    company-irony company-jedi company-shell dashboard elpy
 	    expand-region flycheck flycheck-clang-analyzer htmlize
 	    hungry-delete ido-vertical-mode imaxima ivy linum-relative
-	    magit mark-multiple markdown-mode ob-maxima ob-octave
-	    ox-reveal pdf-tools popup-kill-ring smex spacemacs-theme
-	    sudo-edit swiper switch-window which-key yasnippet)))
+	    magit mark-multiple markdown-mode ox-reveal pdf-tools
+	    popup-kill-ring smex spacemacs-theme sudo-edit swiper
+	    switch-window which-key yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
