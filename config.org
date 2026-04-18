@@ -214,63 +214,64 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
 ** auto-completion (company)
 This is from deadreth
 #+BEGIN_SRC emacs-lisp
-  ;;  (use-package company
+    ;;  (use-package company
+    ;;    :ensure t
+    ;;    :init
+    ;;    (add-hook 'after-init-hook 'global-company-mode))
+    (use-package company
+      :ensure t
+      :config
+      (setq company-idle-delay 0)
+      (setq company-minimum-prefix-length 3))
+
+    (with-eval-after-load 'company
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous)
+      (define-key company-active-map (kbd "SPC") #'company-abort)
+      (add-hook 'python-mode-hook 'company-mode)
+      (add-hook 'c++-mode-hook 'company-mode)
+      (add-hook 'c-mode-hook 'company-mode))
+
+    (use-package company-c-headers
+      :ensure t)
+
+    (use-package company-irony
+      :ensure t
+      :config
+      (setq company-backends '((company-c-headers
+                                company-dabbrev-code
+                                company-irony))))
+
+    (use-package irony
+      :ensure t
+      :config
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  ;;  (use-package company-jedi
   ;;    :ensure t
-  ;;    :init
-  ;;    (add-hook 'after-init-hook 'global-company-mode))
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3))
+  ;;    :config
+  ;;    (require 'company)
+  ;;    (add-to-list 'company-backends 'company-jedi))
 
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort)
-    (add-hook 'python-mode-hook 'company-mode)
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode))
+  ;;  (defun python-mode-company-init ()
+  ;;    (setq-local company-backends '((company-jedi
+  ;;                                    company-etags))))
 
-  (use-package company-c-headers
-    :ensure t)
-
-  (use-package company-irony
-    :ensure t
-    :config
-    (setq company-backends '((company-c-headers
-                              company-dabbrev-code
-                              company-irony))))
-
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-  (use-package company-jedi
-    :ensure t
-    :config
-    (require 'company)
-    (add-to-list 'company-backends 'company-jedi))
-
-  (defun python-mode-company-init ()
-    (setq-local company-backends '((company-jedi
-                                    company-etags))))
   (use-package company-shell
-    :ensure t
-    :config
-    (require 'company)
-    (add-hook 'shell-mode-hook 'shell-mode-company-init))
+      :ensure t
+      :config
+      (require 'company)
+      (add-hook 'shell-mode-hook 'shell-mode-company-init))
 
-  (defun shell-mode-company-init ()
-    (setq-local company-backends '((company-shell
-                                    company-shell-env
-                                    company-etags
-                                    company-dabbrev-code))))
+    (defun shell-mode-company-init ()
+      (setq-local company-backends '((company-shell
+                                      company-shell-env
+                                      company-etags
+                                      company-dabbrev-code))))
 #+END_SRC
 
 ** line numbers and programming
@@ -524,8 +525,11 @@ this section provided by openai but needs to debugging, some functions do not wo
       (flycheck-clang-analyzer-setup)))
 
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'python-mode-hook 'flycheck-mode)
+;;  (add-hook 'python-mode-hook 'flycheck-mode)  ; this is commented out due to potential coflict with jedi and elpy
 #+end_src
+
+#+RESULTS:
+| preview-mode-setup | visual-line-mode | turn-on-reftex | flyspell-mode | LaTeX-math-mode |
 
 ** git integration
 #+BEGIN_SRC emacs-lisp
@@ -545,14 +549,12 @@ this section provided by openai but needs to debugging, some functions do not wo
 #+END_SRC>
 
 ** python
-   There will be a list of utilities to help with python programming
-   As a first choice, trying with elpy...
-*** elpy
+There will be a list of utilities to help with python programming
+switching to the modern eglot + pyright
+*** eglot + pyright
 #+BEGIN_SRC emacs-lisp
-  (use-package elpy
-    :ensure t
-    :init
-    (elpy-enable))
+(add-to-list 'exec-path "~/.emacs.d/elpy/rpc-venv/bin")
+(add-hook 'python-mode-hook 'eglot-ensure)
 #+END_SRC
 ** markdown
 #+BEGIN_SRC emacs-lisp
