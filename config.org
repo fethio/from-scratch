@@ -575,13 +575,6 @@ imaxima seems to be the choice offered by openai but does not exist in melpa. us
     (add-to-list 'interpreter-mode-alist
   		 (cons "maxima" 'maxima-mode)))
 #+END_SRC
-The following lines were commented out (to see whether if things are right without them)
-(autoload 'maxima-mode "maxima" "Maxima mode" t)
-(autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t) ;;
-(autoload 'maxima "maxima" "Maxima interaction" t)
-(autoload 'imath-mode "imath" "Imath mode for math formula input" t) ;;
-(setq imaxima-use-maxima-mode-flag t) ;;
-(add-to-list 'auto-mode-alist '("\\.ma[cx]\\'" . maxima-mode))
 
 #+begin_src maxima :results output
   programmode: false;
