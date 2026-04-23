@@ -251,16 +251,6 @@ This is from deadreth
       (add-hook 'c-mode-hook 'irony-mode)
       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  ;;  (use-package company-jedi
-  ;;    :ensure t
-  ;;    :config
-  ;;    (require 'company)
-  ;;    (add-to-list 'company-backends 'company-jedi))
-
-  ;;  (defun python-mode-company-init ()
-  ;;    (setq-local company-backends '((company-jedi
-  ;;                                    company-etags))))
-
   (use-package company-shell
       :ensure t
       :config
@@ -497,10 +487,6 @@ this section provided by openai but needs to debugging, some functions do not wo
       (run-hooks 'gud-octave-hook))
     )
 
-  (add-hook 'octave-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-c C-d") 'gud-octave)))
-
   ;; Additional customizations for GUD
   (add-hook 'gud-mode-hook
             (lambda ()
@@ -563,7 +549,7 @@ switching to the modern eglot + pyright
   :mode ("\\.md\\'" . markdown-mode)
   :init (setq markdown-command "pandoc"))
 #+END_SRC
-* math modes
+
 ** maxima
 imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
 #+BEGIN_SRC emacs-lisp
@@ -599,26 +585,6 @@ configuration provided by openai
     :mode ("\\.m\\'" . octave-mode)
     :interpreter ("octave" . octave-mode)
     :config
-    ;; Enable inferior-octave-mode for interaction with Octave process
-    (add-hook 'octave-mode-hook
-              (lambda ()
-                (abbrev-mode 1)
-                (auto-fill-mode 1)
-                (if (eq window-system 'x)
-                    (font-lock-mode 1))
-                ;; Define key bindings for sending code to Octave process
-                (define-key octave-mode-map (kbd "C-c C-z") 'run-octave)
-                (define-key octave-mode-map (kbd "C-c C-r") 'octave-send-region)
-                (define-key octave-mode-map (kbd "C-c C-b") 'octave-send-buffer)
-                (define-key octave-mode-map (kbd "C-c C-l") 'octave-send-line)
-                (local-set-key (kbd "C-c C-d") 'gud-octave)
-                (local-set-key (kbd "C-c b") 'gud-break)   ; Changed key binding for setting breakpoints
-                (local-set-key (kbd "C-c u") 'gud-remove)  ; Changed key binding for removing breakpoints
-                (local-set-key (kbd "C-c s") 'gud-step)    ; Changed key binding for step
-                (local-set-key (kbd "C-c n") 'gud-next)    ; Changed key binding for next
-                ;;(local-set-key (kbd "C-c r") 'gud-cont)    ; Changed key binding for continue
-                (local-set-key (kbd "C-c f") 'gud-finish)  ; Changed key binding for finish
-                (local-set-key (kbd "C-c p") 'gud-print)))
 
     ;; ensures that Octave code is properly indented and that the inferior Octave process is more user-friendly with colored output and automatic scrolling
     (setq octave-block-offset 4) ;; Set indentation level to 4 spaces
@@ -628,11 +594,30 @@ configuration provided by openai
                 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
                 (setq comint-prompt-read-only t)
                 (setq comint-scroll-to-bottom-on-output t)))
-    (add-hook 'octave-mode-hook
-              (lambda ()
-                (local-set-key (kbd "C-c C-d") 'gud-octave)))
-    )
+)
 #+END_SRC
+(add-hook 'octave-mode-hook
+          (lambda ()
+            (electric-indent-local-mode -1)
+            (auto-fill-mode -1)
+            (company-mode -1)
+            (abbrev-mode 1)
+            (if (eq window-system 'x)
+                (font-lock-mode 1))
+            (define-key octave-mode-map (kbd "C-c C-z") 'run-octave)
+            (define-key octave-mode-map (kbd "C-c C-r") 'octave-send-region)
+            (define-key octave-mode-map (kbd "C-c C-b") 'octave-send-buffer)
+            (define-key octave-mode-map (kbd "C-c C-l") 'octave-send-line)
+            (local-set-key (kbd "C-c C-d") 'gud-octave)
+            (local-set-key (kbd "C-c b") 'gud-break)
+            (local-set-key (kbd "C-c u") 'gud-remove)
+            (local-set-key (kbd "C-c s") 'gud-step)
+            (local-set-key (kbd "C-c n") 'gud-next)
+            (local-set-key (kbd "C-c f") 'gud-finish)
+            (local-set-key (kbd "C-c p") 'gud-print)))
+#+RESULTS:
+: ((maxima . maxima-mode) (j?ruby\(?:[0-9.]+\) . ruby-mode) (jruby . ruby-mode) (rbx . ruby-mode) (ruby . ruby-mode) (python[0-9.]* . python-mode) (rhino . js-mode) (gjs . js-mode) (nodejs . js-mode) (node . js-mode) (gawk . awk-mode) (nawk . awk-mode) (mawk . awk-mode) (awk . awk-mode) (pike . pike-mode) (\(mini\)?perl5? . perl-mode) (wishx? . tcl-mode) (tcl\(sh\)? . tcl-mode) (expect . tcl-mode) (octave . octave-mode) (scm . scheme-mode) ([acjkwz]sh . sh-mode) (r?bash2? . sh-mode) (dash . sh-mode) (mksh . sh-mode) (\(dt\|pd\|w\)ksh . sh-mode) (es . sh-mode) (i?tcsh . sh-mode) (oash . sh-mode) (rc . sh-mode) (rpm . sh-mode) (sh5? . sh-mode) (tail . text-mode) (more . text-mode) (less . text-mode) (pg . text-mode) (make . makefile-gmake-mode) (guile . scheme-mode) (clisp . lisp-mode) (emacs . emacs-lisp-mode))
+
 * Kill ring
 There is a lot of customization to the kill ring, and while I have not used it much before,
 I decided that it was time to change that.
