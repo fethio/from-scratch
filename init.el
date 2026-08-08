@@ -36,9 +36,16 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
-   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" default))
+   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
+     default))
  '(package-selected-packages
-   '(browse-kill-ring pdf-tools auctex htmlize ox-reveal imaxima magit flycheck-clang-analyzer flycheck company-shell company-jedi company-irony company-c-headers elpy expand-region popup-kill-ring linum-relative mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
+   '(auctex avy beacon browse-kill-ring company company-c-headers
+	    company-irony company-jedi company-shell dashboard elpy
+	    expand-region flycheck flycheck-clang-analyzer htmlize
+	    hungry-delete ido-vertical-mode imaxima ivy linum-relative
+	    magit mark-multiple markdown-mode ox-reveal pdf-tools
+	    popup-kill-ring smex spacemacs-theme sudo-edit swiper
+	    switch-window which-key yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
