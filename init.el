@@ -1,3 +1,8 @@
+;; Use left Option key as Meta
+(setq mac-option-modifier 'meta)
+;; Use right Option key normally for special characters
+(setq mac-right-option-modifier nil)
+
 ;;; This is all kinds of necessary
 (require 'package)
 (setq package-enable-at-startup nil)
