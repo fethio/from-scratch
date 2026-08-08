@@ -39,3 +39,4 @@ eshell/
 eln-cache/
 .emacs.desktop*
 
+elpy/
