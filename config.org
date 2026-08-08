@@ -1,4 +1,4 @@
-ma#+STARTUP: overview
+#+STARTUP: overview
 #+CREATOR: fethi okyar
 #+LANGUAGE: en
 #+OPTIONS: num:nil toc:nil
@@ -6,6 +6,29 @@ ma#+STARTUP: overview
 #+TITLE: emacs configuration from scratch
 
 * startup
+** Font Configuration
+#+BEGIN_SRC emacs-lisp
+  ;; Global default font size (160 = 16pt, adjust as needed)
+  (set-face-attribute 'default nil :height 140)
+
+  ;; Minibuffer prompt text size
+  (set-face-attribute 'minibuffer-prompt nil :height 140)
+
+  ;; Minibuffer input text size (relative to default; 1.0 = same as default)
+  (add-hook 'minibuffer-setup-hook
+            (lambda ()
+              (setq-local face-remapping-alist '((default (:height 1.0) default)))))
+
+  ;; Optional: a bit more line spacing for readability
+  ;; (setq-default line-spacing )
+#+END_SRC
+
+** mac only settings
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (setq mac-option-modifier 'meta))
+#+end_src
+
 ** dashboard
 enable emacs dashboard
 #+BEGIN_SRC emacs-lisp
@@ -16,9 +39,10 @@ enable emacs dashboard
     (setq dashboard-items '((recents . 15)))
     (setq dashboard-banner-logo-title "Hello UncleDave!"))
 #+END_SRC
+
 ** Enable emacs server
 :PROPERTIES:
-Is the server started by the xinit process? do we really need the line below? Or should it be dome here?
+Is the server started by the xinit process? do we really need the line below? Or should it be done here?
 #+begin_src emacs-lisp
   (load "server")
   (unless (server-running-p) (server-start))
@@ -33,12 +57,14 @@ Is the server started by the xinit process? do we really need the line below? Or
 #+END_SRC
 
 * modeline
+
 * buffers and windows
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
 #+BEGIN_SRC emacs-lisp
-     (desktop-save-mode 1)
+  (desktop-save-mode 1)
 #+END_SRC
+
 ** Always murder current buffer
 Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
 #+BEGIN_SRC emacs-lisp
@@ -56,24 +82,17 @@ Unless you have the muscle memory, I recommend omitting this bit, as you may los
 #+END_SRC
 
 ** Turn switch-to-buffer into ibuffer
-I don't understand how ibuffer isn't the default option by now.
-It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x b") 'ibuffer)
 #+END_SRC
 
 ** expert-mode
-If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
 #+BEGIN_SRC emacs-lisp
   (setq ibuffer-expert t)
 #+END_SRC
 
 ** close-all-buffers
-It's one of those things where I genuinely have to wonder why there is no built in functionality for it.
-Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I'd need to spend a few too many
-seconds doing this than I'd like, here's a solution.
-
-This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it unless you really want to.
+This can be invoked using =C-M-s-k=.
 #+BEGIN_SRC emacs-lisp
   (defun close-all-buffers ()
     "Kill all buffers without regard for their origin."
@@ -83,21 +102,18 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
 #+END_SRC
 
 ** save buffers for next session
-This was added in order to enable rocovery of buffers from the previous session (use M-x recover-session)
 #+BEGIN_SRC emacs-lisp
- (setq save-some-buffers-kill-terminal 'kill)
+  (setq save-some-buffers-kill-terminal 'kill)
 #+END_SRC
+
 * interface settings
 ** startup settings
 #+BEGIN_SRC emacs-lisp
-  (menu-bar-mode -1)
+  ;; (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq inhibit-startup-message t)
 #+END_SRC
-
-#+RESULTS:
-: t
 
 ** cursor motion, etc
 *** highlighting, beacon
@@ -109,11 +125,13 @@ This was added in order to enable rocovery of buffers from the previous session 
     :init
     (beacon-mode 1))
 #+END_SRC
+
 *** backward/forward word in camelCase
 #+BEGIN_SRC emacs-lisp
   (global-subword-mode 1)
 #+END_SRC
-*** electric paranthesis
+
+*** electric parenthesis
 #+BEGIN_SRC emacs-lisp
   (setq electric-pairs '(
                          (?\( . ?\))
@@ -132,6 +150,7 @@ ansi term uses zsh
 
   (global-set-key (kbd "<s-return>") 'ansi-term)
 #+END_SRC
+
 ** show lines and columns
 #+BEGIN_SRC emacs-lisp
   (line-number-mode 1)
@@ -139,14 +158,13 @@ ansi term uses zsh
 #+END_SRC
 
 ** Expand region
-A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
     :ensure t
     :bind ("C-q" . er/expand-region))
 #+END_SRC
 
-uuu* helpers
+* helpers
 ** ivy, a prerequisite for others
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
@@ -155,7 +173,6 @@ uuu* helpers
 #+END_SRC
 
 ** swiper, the default search is lame
-I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :ensure t
@@ -173,7 +190,7 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
     :ensure t
     :init (smex-initialize)
     :bind
-    ( "M-x" . smex))
+    ("M-x" . smex))
 #+END_SRC
 
 ** searching with ido
@@ -193,17 +210,7 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 #+END_SRC
 
-** avy and why it's the best thing in existence
-Many times have I pondered how I can move around buffers even quicker.
-I'm glad to say, that avy is precisely what I needed, and it's precisely what you need as well.
-In short, as you invoke one of avy's functions, you will be prompted for a character
-that you'd like to jump to in the /visible portion of the current buffer/.
-Afterwards you will notice how all instances of said character have additional letter on top of them.
-Pressing those letters, that are next to your desired character will move your cursor over there.
-Admittedly, this sounds overly complicated and complex, but in reality takes a split second
-and improves your life tremendously.
-
-I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= is moving by searching characters.
+** avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
     :ensure t
@@ -212,203 +219,143 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
 #+END_SRC
 
 ** auto-completion (company)
-This is from deadreth
 #+BEGIN_SRC emacs-lisp
-    ;;  (use-package company
-    ;;    :ensure t
-    ;;    :init
-    ;;    (add-hook 'after-init-hook 'global-company-mode))
-    (use-package company
-      :ensure t
-      :config
-      (setq company-idle-delay 0)
-      (setq company-minimum-prefix-length 3))
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3))
 
-    (with-eval-after-load 'company
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (define-key company-active-map (kbd "SPC") #'company-abort)
-      (add-hook 'python-mode-hook 'company-mode)
-      (add-hook 'c++-mode-hook 'company-mode)
-      (add-hook 'c-mode-hook 'company-mode))
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "SPC") #'company-abort)
+    (add-hook 'python-mode-hook 'company-mode)
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode))
 
-    (use-package company-c-headers
-      :ensure t)
+  (use-package company-c-headers
+    :ensure t)
 
-    (use-package company-irony
-      :ensure t
-      :config
-      (setq company-backends '((company-c-headers
-                                company-dabbrev-code
-                                company-irony))))
+  (use-package company-irony
+    :ensure t
+    :config
+    (setq company-backends '((company-c-headers
+                              company-dabbrev-code
+                              company-irony))))
 
-    (use-package irony
-      :ensure t
-      :config
-      (add-hook 'c++-mode-hook 'irony-mode)
-      (add-hook 'c-mode-hook 'irony-mode)
-      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (use-package irony
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
   (use-package company-shell
-      :ensure t
-      :config
-      (require 'company)
-      (add-hook 'shell-mode-hook 'shell-mode-company-init))
+    :ensure t
+    :config
+    (require 'company)
+    (add-hook 'shell-mode-hook 'shell-mode-company-init))
 
-    (defun shell-mode-company-init ()
-      (setq-local company-backends '((company-shell
-                                      company-shell-env
-                                      company-etags
-                                      company-dabbrev-code))))
+  (defun shell-mode-company-init ()
+    (setq-local company-backends '((company-shell
+                                    company-shell-env
+                                    company-etags
+                                    company-dabbrev-code))))
 #+END_SRC
 
 ** line numbers and programming
-Every now and then all of us feel the urge to be productive and write some code.
-In the event that this happens, the following bit of configuration makes sure that 
-we have access to relative line numbering in programming-related modes.
-I highly recommend not enabling =linum-relative-mode= globally, as it messed up 
-something like =ansi-term= for instance.
 #+BEGIN_SRC emacs-lisp
-  ;;  (use-package linum-relative
-  ;;    :ensure t
-  ;;    :config
-  ;;      (setq linum-relative-current-symbol "")
-  ;;      (add-hook 'prog-mode-hook 'linum-relative-mode))
-  ;; (global-display-line-numbers-mode)
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   ;; (add-hook 'after-init-hook (lambda () (global-display-line-numbers-mode t)))
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+END_SRC
-** emacspeak
-#+BEGIN_SRC emacs-lisp
-  ;;  (load-file "~/software/emacspeak-master/lisp/emacspeak-setup.el")
-#+END_SRC
+
 * org mode
 ** keybindings
-For a better experience, the three Org commands org-store-link, org-capture and org-agenda ought to be accessible anywhere in Emacs, not just in Org buffers. To that effect, you need to bind them to globally available keys
 #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-c l") #'org-store-link)
-   (global-set-key (kbd "C-c a") #'org-agenda)
-   (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
 #+END_SRC
 
 ** agenda files
+Only load files that actually exist on this machine.
 #+BEGIN_SRC emacs-lisp
-    (setq org-agenda-files
-      '("/home/fethi/snkr/org/ajanda.kisisel"
-        "/home/fethi/snkr/org/ajanda.bilimsel"
-        "/home/fethi/snkr/org/ajanda.mesleki"
-        "/home/fethi/snkr/org/gunce.kisisel"
-        "/home/fethi/snkr/org/gunce.bilimsel"
-        "/home/fethi/snkr/org/gunce.mesleki"))
-#+END_SRC
-
-customizations from Rainer König
-** capture mode and templates
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f6>") 'org-capture)
-  (setq org-capture-templates
-    '(("b" "Bilimsel")
-      ("bj" "journal entry" entry
-       (file+headline "~/snkr/org/jurnal.bilimsel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("bt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.bilimsel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("k" "Kişisel")
-      ("kj" "journal entry" entry
-       (file+headline "~/snkr/org/gunce.kisisel" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("kt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.kisisel" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)
-      ("m" "Mesleki")
-      ("mj" "journal entry" entry
-       (file+headline "~/snkr/org/gunce.mesleki" "Capture")
-       (file "~/snkr/org/capture_journal")
-       :empty-lines-before 1)
-      ("mt" "TODO entry" entry
-       (file+headline "~/snkr/org/ajanda.mesleki" "Capture")
-       (file "~/snkr/org/capture_todo")
-       :empty-lines-before 1)))
+  (setq org-agenda-files
+        (seq-filter #'file-exists-p
+                    '("/home/fethi/snkr/org/ajanda.kisisel"
+                      "/home/fethi/snkr/org/ajanda.bilimsel"
+                      "/home/fethi/snkr/org/ajanda.mesleki"
+                      "/home/fethi/snkr/org/gunce.kisisel"
+                      "/home/fethi/snkr/org/gunce.bilimsel"
+                      "/home/fethi/snkr/org/gunce.mesleki")))
 #+END_SRC
 
 ** logging, drawer settings
+customizations from Rainer König
 #+BEGIN_SRC emacs-lisp
- (setq org-log-into-drawer t)
- (setq org-log-reschedule 'note)
- (setq org-refile-allow-creating-parent-nodes 'confirm)
- (setq org-refile-targets '((org-agenda-files :level . 1)))
- (setq org-refile-use-outline-path 'file)
+  (setq org-log-into-drawer t)
+  (setq org-log-reschedule 'note)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-refile-targets '((org-agenda-files :level . 1)))
+  (setq org-refile-use-outline-path 'file)
 #+END_SRC
+
 ** org-babel
+Single consolidated babel languages block.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((maxima . t)
      (octave . t)
      (python . t)
-     (shell . t)))
+     (shell  . t)))
 #+end_src
 
 * latex
 #+BEGIN_SRC emacs-lisp
-      (use-package tex
-        :ensure auctex
-        :defer t
-        :hook (LaTeX-mode . LaTeX-math-mode)
-        :init
-        ;; Enable auto-saving and parsing of documents
-        (setq TeX-auto-save t)
-        (setq TeX-parse-self t)
-        :config
-        ;; Enable PDF mode
-        (setq TeX-PDF-mode t)
-        ;; Enable synctex correlation
-        (setq TeX-source-correlate-mode t)
-        (setq TeX-source-correlate-start-server t)
-        ;; Use the default viewer
-        (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-              TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-        ;; Enable reftex
-        (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-        ;; Keybinding for compiling
-        (with-eval-after-load 'latex
-        (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
-        (define-key LaTeX-mode-map (kbd "C-c C-v") 'TeX-view))
-  
-        (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-        )
-      (use-package auctex
-        :ensure t
-        :defer t)
+  (use-package tex
+    :ensure auctex
+    :defer t
+    :hook (LaTeX-mode . LaTeX-math-mode)
+    :init
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    :config
+    (setq TeX-PDF-mode t)
+    (setq TeX-source-correlate-mode t)
+    (setq TeX-source-correlate-start-server t)
+    (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    (with-eval-after-load 'latex
+      (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-command-master)
+      (define-key LaTeX-mode-map (kbd "C-c C-v") 'TeX-view))
+    (add-hook 'LaTeX-mode-hook 'visual-line-mode))
+
+  (use-package auctex
+    :ensure t
+    :defer t)
 #+END_SRC
+
 ** PDF Tools Configuration
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
     :ensure t
     :config
-    ;; Initialize pdf-tools
     (pdf-tools-install)
-    ;; Disable line numbers in pdf-view-mode
-    (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
-    )
-;;  (setq pdf-view-incompatible-modes '(display-line-numbers-mode))
+    (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1))))
 #+END_SRC
 
 ** yasnippet stuff
-Yasnippet settings
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-      :ensure t
-      :config
-      (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-      (yas-global-mode 1))
+    :ensure t
+    :config
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+    (yas-global-mode 1))
 #+END_SRC
 
 ** reveal.js stuff
@@ -423,8 +370,8 @@ Yasnippet settings
   (use-package htmlize
     :ensure t)
 #+END_SRC
+
 * language modes
-From deadreth
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook
             '(lambda ()
@@ -448,54 +395,46 @@ From deadreth
 #+END_SRC
 
 ** gud - grand unified debugger
-this section provided by openai but needs to debugging, some functions do not work
+gud is a built-in package; :ensure nil avoids a spurious MELPA lookup.
 #+begin_src emacs-lisp
   (use-package gud
-    :ensure t
+    :ensure nil
     :config
-    ;; Define Octave-specific GUD setup
-    ;; Dummy function to avoid 'void function' error
     (defun gud-gdb-massage-args (file args)
       "Massage arguments for GDB."
       args)
 
-    ;; Dummy function to avoid 'void function' error
     (defun gud-gdb-marker-filter (string)
       "Filter GDB markers."
       string)
 
-    ;; Dummy function to avoid 'void function' error
     (defun gud-gdb-find-file (file)
       "Find the source file for GDB."
       (find-file-noselect file))
-    ;; Setup GUD for Octave
+
     (defun gud-octave ()
       "Run Octave GUD."
       (interactive)
       (gud-common-init "octave" 'gud-gdb-massage-args 'gud-gdb-marker-filter 'gud-gdb-find-file)
       (set (make-local-variable 'gud-minor-mode) 'gud-octave)
-      ;;(gud-def gud-break  "dbstop at %l in %f"   "\C-b" "Set breakpoint at current line.")
       (gud-def gud-break  "dbstop in %f at %l"   "\C-b" "Set breakpoint at current line.")
-      (gud-def gud-remove "dbclear at %l in %f" "\C-d" "Remove breakpoint at current line.")
-      (gud-def gud-step   "dbstep %p"           "\C-s" "Step one source line with display.")
-      (gud-def gud-next   "dbnext %p"           "\C-n" "Step one line (skip functions).")
-      (gud-def gud-cont   "dbcont"              "\C-r" "Continue with display.")
-      (gud-def gud-finish "dbquit"              "\C-f" "Finish executing current function.")
-      (gud-def gud-print  "dbprint %e"          "\C-p" "Print expression at point.")
+      (gud-def gud-remove "dbclear at %l in %f"  "\C-d" "Remove breakpoint at current line.")
+      (gud-def gud-step   "dbstep %p"            "\C-s" "Step one source line with display.")
+      (gud-def gud-next   "dbnext %p"            "\C-n" "Step one line (skip functions).")
+      (gud-def gud-cont   "dbcont"               "\C-r" "Continue with display.")
+      (gud-def gud-finish "dbquit"               "\C-f" "Finish executing current function.")
+      (gud-def gud-print  "dbprint %e"           "\C-p" "Print expression at point.")
       (setq comint-prompt-regexp "^(debug|more|octave|db> *\\|octave.*[\\]: *)")
       (setq paragraph-start comint-prompt-regexp)
-      (run-hooks 'gud-octave-hook))
-    )
+      (run-hooks 'gud-octave-hook)))
 
-  ;; Additional customizations for GUD
   (add-hook 'gud-mode-hook
             (lambda ()
-              (local-set-key (kbd "<f5>") 'gud-cont)
-              (local-set-key (kbd "<f9>") 'gud-break)
-              (local-set-key (kbd "<f10>") 'gud-next)
-              (local-set-key (kbd "<f11>") 'gud-step)
+              (local-set-key (kbd "<f5>")    'gud-cont)
+              (local-set-key (kbd "<f9>")    'gud-break)
+              (local-set-key (kbd "<f10>")   'gud-next)
+              (local-set-key (kbd "<f11>")   'gud-step)
               (local-set-key (kbd "S-<f11>") 'gud-finish)))
-
 #+end_src
 
 ** flycheck
@@ -511,57 +450,48 @@ this section provided by openai but needs to debugging, some functions do not wo
       (flycheck-clang-analyzer-setup)))
 
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;;  (add-hook 'python-mode-hook 'flycheck-mode)  ; this is commented out due to potential coflict with jedi and elpy
+  ;; (add-hook 'python-mode-hook 'flycheck-mode)  ; commented out: potential conflict with eglot
 #+end_src
-
-#+RESULTS:
-| preview-mode-setup | visual-line-mode | turn-on-reftex | flyspell-mode | LaTeX-math-mode |
 
 ** git integration
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :ensure t
-  :config
-  (setq magit-push-always-verify nil)
-  (setq git-commit-summary-max-length 50)
-  :bind
-  ("M-g" . magit-status))
+  (use-package magit
+    :ensure t
+    :config
+    (setq magit-push-always-verify nil)
+    (setq git-commit-summary-max-length 50)
+    :bind
+    ("M-g" . magit-status))
 #+END_SRC
-
-** htmlize
-#+BEGIN_SRC emacs-lisp
-(use-package htmlize
-  :ensure t)
-#+END_SRC>
 
 ** python
-There will be a list of utilities to help with python programming
-switching to the modern eglot + pyright
+Switching to the modern eglot + pyright.
 *** eglot + pyright
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'exec-path "~/.emacs.d/elpy/rpc-venv/bin")
-(add-hook 'python-mode-hook 'eglot-ensure)
+  (add-to-list 'exec-path "~/.emacs.d/elpy/rpc-venv/bin")
+  (add-hook 'python-mode-hook 'eglot-ensure)
 #+END_SRC
+
 ** markdown
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" . markdown-mode)
-  :init (setq markdown-command "pandoc"))
+  (use-package markdown-mode
+    :ensure t
+    :mode ("\\.md\\'" . markdown-mode)
+    :init (setq markdown-command "pandoc"))
 #+END_SRC
 
 ** maxima
-imaxima seems to be the choice offered by openai but does not exist in melpa. using the maxima package instead
+Guard with executable-find so this block is silently skipped on
+machines where Maxima is not installed (e.g. fethis-air).
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
-  (use-package maxima
-    :init
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
-  	  maxima-display-maxima-buffer nil)
-    (add-to-list 'auto-mode-alist
-  		 (cons "\\.mac\\'" 'maxima-mode))
-    (add-to-list 'interpreter-mode-alist
-  		 (cons "maxima" 'maxima-mode)))
+  (when (executable-find "maxima")
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/maxima/")
+    (use-package maxima
+      :init
+      (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0)
+            maxima-display-maxima-buffer nil)
+      (add-to-list 'auto-mode-alist  (cons "\\.mac\\'" 'maxima-mode))
+      (add-to-list 'interpreter-mode-alist (cons "maxima" 'maxima-mode))))
 #+END_SRC
 
 #+begin_src maxima :results output
@@ -569,73 +499,60 @@ imaxima seems to be the choice offered by openai but does not exist in melpa. us
   eq: x^2 - 16 = 0;
   solution: solve(eq, x);
   print(solution);
-#+end_src   
+#+end_src
 
 #+RESULTS:
 : solve: solution:
 :                                     x = - 4
 :                                      x = 4
-: [%t1, %t2] 
+: [%t1, %t2]
 
 ** octave
-configuration provided by openai
 #+BEGIN_SRC emacs-lisp
   (use-package octave
     :ensure t
     :mode ("\\.m\\'" . octave-mode)
     :interpreter ("octave" . octave-mode)
     :config
-
-    ;; ensures that Octave code is properly indented and that the inferior Octave process is more user-friendly with colored output and automatic scrolling
-    (setq octave-block-offset 4) ;; Set indentation level to 4 spaces
-    (setq inferior-octave-startup-args '("--no-gui")) ;; Start Octave without GUI
+    (setq octave-block-offset 4)
+    (setq inferior-octave-startup-args '("--no-gui"))
     (add-hook 'inferior-octave-mode-hook
               (lambda ()
                 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
                 (setq comint-prompt-read-only t)
-                (setq comint-scroll-to-bottom-on-output t)))
-)
+                (setq comint-scroll-to-bottom-on-output t))))
 #+END_SRC
-(add-hook 'octave-mode-hook
-          (lambda ()
-            (electric-indent-local-mode -1)
-            (auto-fill-mode -1)
-            (company-mode -1)
-            (abbrev-mode 1)
-            (if (eq window-system 'x)
-                (font-lock-mode 1))
-            (define-key octave-mode-map (kbd "C-c C-z") 'run-octave)
-            (define-key octave-mode-map (kbd "C-c C-r") 'octave-send-region)
-            (define-key octave-mode-map (kbd "C-c C-b") 'octave-send-buffer)
-            (define-key octave-mode-map (kbd "C-c C-l") 'octave-send-line)
-            (local-set-key (kbd "C-c C-d") 'gud-octave)
-            (local-set-key (kbd "C-c b") 'gud-break)
-            (local-set-key (kbd "C-c u") 'gud-remove)
-            (local-set-key (kbd "C-c s") 'gud-step)
-            (local-set-key (kbd "C-c n") 'gud-next)
-            (local-set-key (kbd "C-c f") 'gud-finish)
-            (local-set-key (kbd "C-c p") 'gud-print)))
-#+RESULTS:
-: ((maxima . maxima-mode) (j?ruby\(?:[0-9.]+\) . ruby-mode) (jruby . ruby-mode) (rbx . ruby-mode) (ruby . ruby-mode) (python[0-9.]* . python-mode) (rhino . js-mode) (gjs . js-mode) (nodejs . js-mode) (node . js-mode) (gawk . awk-mode) (nawk . awk-mode) (mawk . awk-mode) (awk . awk-mode) (pike . pike-mode) (\(mini\)?perl5? . perl-mode) (wishx? . tcl-mode) (tcl\(sh\)? . tcl-mode) (expect . tcl-mode) (octave . octave-mode) (scm . scheme-mode) ([acjkwz]sh . sh-mode) (r?bash2? . sh-mode) (dash . sh-mode) (mksh . sh-mode) (\(dt\|pd\|w\)ksh . sh-mode) (es . sh-mode) (i?tcsh . sh-mode) (oash . sh-mode) (rc . sh-mode) (rpm . sh-mode) (sh5? . sh-mode) (tail . text-mode) (more . text-mode) (less . text-mode) (pg . text-mode) (make . makefile-gmake-mode) (guile . scheme-mode) (clisp . lisp-mode) (emacs . emacs-lisp-mode))
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'octave-mode-hook
+            (lambda ()
+              (electric-indent-local-mode -1)
+              (auto-fill-mode -1)
+              (company-mode -1)
+              (abbrev-mode 1)
+              (if (eq window-system 'x)
+                  (font-lock-mode 1))
+              (define-key octave-mode-map (kbd "C-c C-z") 'run-octave)
+              (define-key octave-mode-map (kbd "C-c C-r") 'octave-send-region)
+              (define-key octave-mode-map (kbd "C-c C-b") 'octave-send-buffer)
+              (define-key octave-mode-map (kbd "C-c C-l") 'octave-send-line)
+              (local-set-key (kbd "C-c C-d") 'gud-octave)
+              (local-set-key (kbd "C-c b")   'gud-break)
+              (local-set-key (kbd "C-c u")   'gud-remove)
+              (local-set-key (kbd "C-c s")   'gud-step)
+              (local-set-key (kbd "C-c n")   'gud-next)
+              (local-set-key (kbd "C-c f")   'gud-finish)
+              (local-set-key (kbd "C-c p")   'gud-print)))
+#+END_SRC
 
 * Kill ring
-There is a lot of customization to the kill ring, and while I have not used it much before,
-I decided that it was time to change that.
 ** Maximum entries on the ring
-The default is 60, I personally need more sometimes.
 #+BEGIN_SRC emacs-lisp
   (setq kill-ring-max 100)
 #+END_SRC
 
 ** popup-kill-ring
-(alternative browse-kill-ring)
-Out of all the packages I tried out, this one, being the simplest, appealed to me most.
-With a simple M-y you can now browse your kill-ring like browsing autocompletion items.
-C-n and C-p totally work for this.
 #+BEGIN_SRC emacs-lisp
-  (require 'popup)
-  (require 'pos-tip)
-
   (use-package popup-kill-ring
     :ensure t
     :bind ("M-y" . popup-kill-ring)
@@ -643,20 +560,12 @@ C-n and C-p totally work for this.
     (with-eval-after-load 'popup
       (define-key popup-kill-ring-keymap (kbd "C-n") 'popup-next)
       (define-key popup-kill-ring-keymap (kbd "C-p") 'popup-previous)))
- ;;  (setq popup-kill-ring-interactive-insert t)
-  ;;  (use-package browse-kill-ring
-  ;;    :ensure t
-  ;;    :bind ("M-y" . browse-kill-ring)
-  ;;    :config
-  ;;    (setq browse-kill-ring-separator "\f")
-  ;;    (setq browse-kill-ring-highlight-current-entry t)
-  ;;    (setq browse-kill-ring-separator-face 'bold))
 #+END_SRC
 
 * convenient functions
 ** config edit
 #+BEGIN_SRC emacs-lisp
-  (defun config-visit()
+  (defun config-visit ()
     (interactive)
     (find-file "~/.emacs.d/config.org"))
   (global-set-key (kbd "C-c e") 'config-visit)
@@ -664,10 +573,10 @@ C-n and C-p totally work for this.
 
 ** config reload
 #+BEGIN_SRC emacs-lisp
-  (defun config-reload()
+  (defun config-reload ()
     (interactive)
     (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
-  (global-set-key (kbd "C-c r") 'config-reload)    
+  (global-set-key (kbd "C-c r") 'config-reload)
 #+END_SRC
 
 ** copy-whole-line
@@ -677,17 +586,16 @@ C-n and C-p totally work for this.
     (save-excursion
       (kill-new
        (buffer-substring
-	(point-at-bol)
-	(point-at-eol)))))
+        (point-at-bol)
+        (point-at-eol)))))
   (global-set-key (kbd "C-c w l") 'copy-whole-line)
 #+END_SRC
 
 ** kill-whole-word function
-#+BEGIN_SRC  emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defun kill-whole-word ()
     (interactive)
     (backward-word)
     (kill-word 1))
   (global-set-key (kbd "C-c w w") 'kill-whole-word)
 #+END_SRC
-
