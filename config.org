@@ -9,10 +9,10 @@
 ** Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
-  (set-face-attribute 'default nil :height 140)
+  (set-face-attribute 'default nil :height 150)
 
   ;; Minibuffer prompt text size
-  (set-face-attribute 'minibuffer-prompt nil :height 140)
+  (set-face-attribute 'minibuffer-prompt nil :height 150)
 
   ;; Minibuffer input text size (relative to default; 1.0 = same as default)
   (add-hook 'minibuffer-setup-hook
@@ -76,7 +76,6 @@ Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for
 #+END_SRC
 
 ** Kill buffers without asking for confirmation
-Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
 #+BEGIN_SRC emacs-lisp
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
@@ -165,52 +164,54 @@ ansi term uses zsh
 #+END_SRC
 
 * helpers
-** ivy, a prerequisite for others
+** ivy + counsel — unified completion framework
+ivy is the completion engine; counsel provides ivy-enhanced versions of
+standard Emacs commands; swiper provides ivy-based buffer search.
+ido and smex are replaced by this trio.
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :ensure t
-    :config (ivy-mode 1))
-#+END_SRC
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-count-format "(%d/%d) "))
 
-** swiper, the default search is lame
-#+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t
+    :after ivy
+    :config (counsel-mode 1)
+    :bind
+    ("M-x"     . counsel-M-x)
+    ("C-x C-f" . counsel-find-file)
+    ("C-c g"   . counsel-git)
+    ("C-c j"   . counsel-git-grep))
+
   (use-package swiper
     :ensure t
-    :bind ("C-s" . 'swiper))
+    :after ivy
+    :bind ("C-s" . swiper))
 #+END_SRC
 
-** help for C-x, M-x, etc.
+** smex — frecency history backend for counsel-M-x
+smex is kept as a history backend only; counsel-M-x uses it automatically
+when installed. The direct M-x binding is now handled by counsel above.
+#+BEGIN_SRC emacs-lisp
+  (use-package smex
+    :ensure t
+    :init (smex-initialize))
+#+END_SRC
+
+** which-key
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
     :init
     (which-key-mode 1))
-
-  (use-package smex
-    :ensure t
-    :init (smex-initialize)
-    :bind
-    ("M-x" . smex))
-#+END_SRC
-
-** searching with ido
-#+BEGIN_SRC emacs-lisp
-  (setq ido-enable-flex-matching nil)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-everywhere t)
-  (ido-mode 1)
-#+END_SRC
-
-*** ido vertical
-#+BEGIN_SRC emacs-lisp
-  (use-package ido-vertical-mode
-    :ensure t
-    :init
-    (ido-vertical-mode 1))
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 #+END_SRC
 
 ** avy
+avy operates on visible buffer characters — completely orthogonal to
+the minibuffer completion stack, no conflicts.
 #+BEGIN_SRC emacs-lisp
   (use-package avy
     :ensure t
@@ -219,6 +220,8 @@ ansi term uses zsh
 #+END_SRC
 
 ** auto-completion (company)
+irony and company-irony are replaced by eglot + company-capf for C/C++.
+company-shell is retained for shell-mode completion.
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :ensure t
@@ -233,25 +236,8 @@ ansi term uses zsh
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
     (define-key company-active-map (kbd "SPC") #'company-abort)
     (add-hook 'python-mode-hook 'company-mode)
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode))
-
-  (use-package company-c-headers
-    :ensure t)
-
-  (use-package company-irony
-    :ensure t
-    :config
-    (setq company-backends '((company-c-headers
-                              company-dabbrev-code
-                              company-irony))))
-
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+    (add-hook 'c++-mode-hook   'company-mode)
+    (add-hook 'c-mode-hook     'company-mode))
 
   (use-package company-shell
     :ensure t
@@ -470,6 +456,25 @@ Switching to the modern eglot + pyright.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'exec-path "~/.emacs.d/elpy/rpc-venv/bin")
   (add-hook 'python-mode-hook 'eglot-ensure)
+#+END_SRC
+
+** C / C++
+Using eglot for C/C++ LSP support (clangd backend), replacing the
+former irony + company-irony + company-c-headers stack.
+clangd must be installed on the system (clang package on Arch,
+or via Homebrew on macOS: brew install llvm).
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'c-mode-hook   'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+
+  ;; company-capf (built-in) feeds completions from eglot automatically;
+  ;; set it as the primary backend for C/C++ buffers.
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (setq-local company-backends '(company-capf company-dabbrev-code))))
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              (setq-local company-backends '(company-capf company-dabbrev-code))))
 #+END_SRC
 
 ** markdown
