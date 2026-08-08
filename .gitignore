@@ -23,15 +23,14 @@ tramp
 eshell/
 eln-cache/
 config.el
-<<<<<<< HEAD
-.org-id-locations
-
-# Session related stuff
-session.*
-.emacs.desktop*
-\#*
-=======
 init.el
+.org-id-locations
+url/
+auto-save-list/
+autosave/
+projectile-bookmarks.eld
+transient/
+custom.el
 
 # Session related stuff
 session.*
@@ -39,4 +38,4 @@ session.*
 eshell/
 eln-cache/
 .emacs.desktop*
->>>>>>> fethis-air
+
