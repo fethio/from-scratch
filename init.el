@@ -1,3 +1,8 @@
+;; Use left Option key as Meta
+(setq mac-option-modifier 'meta)
+;; Use right Option key normally for special characters
+(setq mac-right-option-modifier nil)
+
 ;;; This is all kinds of necessary
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -31,14 +36,21 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
-   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" default))
+   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
+     default))
  '(package-selected-packages
-   '(browse-kill-ring pdf-tools auctex htmlize ox-reveal imaxima magit flycheck-clang-analyzer flycheck company-shell company-jedi company-irony company-c-headers elpy expand-region popup-kill-ring linum-relative mark-multiple avy swiper ivy company dashboard sudo-edit hungry-delete switch-window smex ido-vertical-mode yasnippet beacon spacemacs-theme which-key)))
+   '(auctex avy beacon browse-kill-ring company company-c-headers
+	    company-irony company-jedi company-shell counsel dashboard
+	    elpy expand-region flycheck flycheck-clang-analyzer
+	    htmlize hungry-delete ido-vertical-mode imaxima ivy
+	    linum-relative magit mark-multiple markdown-mode ox-reveal
+	    pdf-tools popup-kill-ring smex spacemacs-theme sudo-edit
+	    swiper switch-window which-key yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#292b2e" :foreground "#b2b2b2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 112 :width normal :foundry "ADBO" :family "Source Code Pro")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#292b2e" :foreground "#b2b2b2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 124 :width normal)))))
 
 (put 'scroll-left 'disabled nil)
