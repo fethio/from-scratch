@@ -11,16 +11,20 @@
 *.~undo-tree
 
 # other stuff
+tutorial
 bookmarks
 elpa/
-org-persist/
 ido.last
 recentf
 smex-items
 # snippets/
 tramp
 config.el
+init.el
 
 # Session related stuff
 session.*
 \#*
+eshell/
+eln-cache/
+.emacs.desktop*
