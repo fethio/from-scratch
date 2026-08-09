@@ -6,6 +6,11 @@
 #+TITLE: emacs configuration from scratch
 
 * startup
+something that uses incf causes the requirement for cl-lib 
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+#+END_SRC
+
 ** Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
@@ -26,8 +31,11 @@
 ** mac only settings
 #+begin_src emacs-lisp
   (when (eq system-type 'darwin)
-    (setq mac-option-modifier 'meta))
-#+end_src
+    (setq mac-option-modifier 'meta)
+    (setenv "PKG_CONFIG_PATH"
+            (concat "/usr/local/opt/curl/lib/pkgconfig:"
+                    (or (getenv "PKG_CONFIG_PATH") ""))))
+  #+end_src
 
 ** dashboard
 enable emacs dashboard
@@ -169,36 +177,39 @@ ivy is the completion engine; counsel provides ivy-enhanced versions of
 standard Emacs commands; swiper provides ivy-based buffer search.
 ido and smex are replaced by this trio.
 #+BEGIN_SRC emacs-lisp
-  (use-package ivy
-    :ensure t
-    :config
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t)
-    (setq ivy-count-format "(%d/%d) "))
+    (use-package ivy
+      :ensure t
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-count-format "(%d/%d) "))
 
-  (use-package counsel
+    (use-package counsel
     :ensure t
     :after ivy
+    :demand t
     :config (counsel-mode 1)
     :bind
     ("M-x"     . counsel-M-x)
     ("C-x C-f" . counsel-find-file)
     ("C-c g"   . counsel-git)
     ("C-c j"   . counsel-git-grep))
-
-  (use-package swiper
-    :ensure t
-    :after ivy
-    :bind ("C-s" . swiper))
+  
+      (use-package swiper
+      :ensure t
+      :after ivy
+      :bind ("C-s" . swiper))
 #+END_SRC
+
+#+RESULTS:
+: swiper
 
 ** smex — frecency history backend for counsel-M-x
 smex is kept as a history backend only; counsel-M-x uses it automatically
 when installed. The direct M-x binding is now handled by counsel above.
 #+BEGIN_SRC emacs-lisp
   (use-package smex
-    :ensure t
-    :init (smex-initialize))
+    :ensure t)
 #+END_SRC
 
 ** which-key

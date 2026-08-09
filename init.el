@@ -36,7 +36,8 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
-   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
+   '("01f347a923dd21661412d4c5a7c7655bf17fb311b57ddbdbd6fce87bd7e58de6"
+     "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
      default))
  '(package-selected-packages
    '(auctex avy beacon browse-kill-ring company company-c-headers
