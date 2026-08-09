@@ -10,7 +10,9 @@ something that uses incf causes the requirement for cl-lib
 #+BEGIN_SRC emacs-lisp
   (require 'cl-lib)
 #+END_SRC
-
+ensure compat is installed and loaded before transient and magit load
+(use-package compat
+  :ensure t)
 ** Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
@@ -35,7 +37,7 @@ something that uses incf causes the requirement for cl-lib
     (setenv "PKG_CONFIG_PATH"
             (concat "/usr/local/opt/curl/lib/pkgconfig:"
                     (or (getenv "PKG_CONFIG_PATH") ""))))
-  #+end_src
+#+end_src
 
 ** dashboard
 enable emacs dashboard
@@ -382,7 +384,7 @@ Single consolidated babel languages block.
   (add-hook 'python-mode-hook 'yas-minor-mode)
   (add-hook 'c-mode-hook 'yas-minor-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
-  (setq org-ellipsis " ")
+  (setq org-ellipsis " ▾")
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-confirm-babel-evaluate nil)
@@ -465,7 +467,6 @@ gud is a built-in package; :ensure nil avoids a spurious MELPA lookup.
 Switching to the modern eglot + pyright.
 *** eglot + pyright
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'exec-path "~/.emacs.d/elpy/rpc-venv/bin")
   (add-hook 'python-mode-hook 'eglot-ensure)
 #+END_SRC
 
