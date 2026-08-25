@@ -11,8 +11,10 @@ something that uses incf causes the requirement for cl-lib
   (require 'cl-lib)
 #+END_SRC
 ensure compat is installed and loaded before transient and magit load
+#+BEGIN_SRC emacs-lisp
 (use-package compat
   :ensure t)
+#+END_SRC
 ** Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
@@ -36,6 +38,7 @@ ensure compat is installed and loaded before transient and magit load
     (set-face-attribute 'default nil :height 150)
     (set-face-attribute 'minibuffer-prompt nil :height 150)
     (setq mac-option-modifier 'meta)
+    (setq mac-right-option-modifier 'none)
     (setenv "PKG_CONFIG_PATH"
             (concat "/usr/local/opt/curl/lib/pkgconfig:"
                     (or (getenv "PKG_CONFIG_PATH") ""))))
@@ -120,7 +123,7 @@ This can be invoked using =C-M-s-k=.
 * interface settings
 ** startup settings
 #+BEGIN_SRC emacs-lisp
-  ;; (menu-bar-mode -1)
+  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq inhibit-startup-message t)

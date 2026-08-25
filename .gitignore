@@ -41,3 +41,7 @@ eln-cache/
 
 elpy/
 elpy/
+eln-cache/
+eshell/history
+eshell/lastdir
+transient/history.el
