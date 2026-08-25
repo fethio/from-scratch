@@ -16,10 +16,10 @@ ensure compat is installed and loaded before transient and magit load
 ** Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
-  (set-face-attribute 'default nil :height 130)
+  (set-face-attribute 'default nil :height 124)
 
   ;; Minibuffer prompt text size
-  (set-face-attribute 'minibuffer-prompt nil :height 130)
+  (set-face-attribute 'minibuffer-prompt nil :height 124)
 
   ;; Minibuffer input text size (relative to default; 1.0 = same as default)
   (add-hook 'minibuffer-setup-hook
