@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 #+STARTUP: overview
 #+CREATOR: fethi okyar
 #+LANGUAGE: en
@@ -6,16 +7,16 @@
 #+TITLE: emacs configuration from scratch
 
 * startup
-something that uses incf causes the requirement for cl-lib 
-#+BEGIN_SRC emacs-lisp
-  (require 'cl-lib)
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; -*- lexical-binding: t; -*-
 #+END_SRC
-ensure compat is installed and loaded before transient and magit load
+
+some packages depend on cl-lib 
 #+BEGIN_SRC emacs-lisp
-(use-package compat
-  :ensure t)
+      (require 'cl-lib)
 #+END_SRC
-** Font Configuration
+
+* Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
   (set-face-attribute 'default nil :height 124)
@@ -97,7 +98,7 @@ Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for
 
 ** Turn switch-to-buffer into ibuffer
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
+;;;  (global-set-key (kbd "C-x b") 'ibuffer)
 #+END_SRC
 
 ** expert-mode
@@ -179,46 +180,63 @@ ansi term uses zsh
 #+END_SRC
 
 * helpers
-** ivy + counsel — unified completion framework
-ivy is the completion engine; counsel provides ivy-enhanced versions of
-standard Emacs commands; swiper provides ivy-based buffer search.
-ido and smex are replaced by this trio.
+** Vertico - unified completion framework
+ensure compat is installed and loaded before magit and consult
 #+BEGIN_SRC emacs-lisp
-    (use-package ivy
+(use-package compat
+  :ensure t)
+#+END_SRC
+now, the rest of the system
+#+BEGIN_SRC emacs-lisp
+      ;; NEW - Vertico completion stack
+      (use-package vertico
+        :ensure t
+        :init
+        (vertico-mode 1)
+        :config
+        (setq vertico-cycle t)  ; Enable cycling through candidates
+        (setq vertico-count 15) ; Number of candidates to show
+        :bind
+        ("C-x B" . vertico-buffer-mode)  ; Replace ibuffer binding temporarily
+        :custom
+        (vertico-resize t))  ; Resize minibuffer as needed
+
+      (use-package marginalia
+        :ensure t
+        :after vertico
+        :init
+        (marginalia-mode 1))
+
+      (use-package orderless
+        :ensure t
+        :init
+        (setq completion-styles '(orderless basic))
+        (setq completion-category-defaults nil)
+        (setq completion-category-overrides '((file (styles partial-completion)))))
+
+    ;; Just load and configure consult
+    (use-package consult
       :ensure t
+      :after vertico
+      :init
       :config
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq ivy-count-format "(%d/%d) "))
-
-    (use-package counsel
-    :ensure t
-    :after ivy
-    :demand t
-    :config (counsel-mode 1)
+      (require 'consult)
     :bind
-    ("M-x"     . counsel-M-x)
-    ("C-x C-f" . counsel-find-file)
-    ("C-c g"   . counsel-git)
-    ("C-c j"   . counsel-git-grep))
-  
-      (use-package swiper
-      :ensure t
-      :after ivy
-      :bind ("C-s" . swiper))
+  ;; The correct M-x replacement
+  ;;("M-x" . consult-command)           ; As you discovered, this is the command for M-x [citation:12]
+
+  ;; File and buffer finding
+  ("C-x C-f" . consult-find)          ; Correct command for finding files [citation:1][citation:12]
+  ("C-x b" . consult-buffer)          ; This one was correct! [citation:12], COMMENTED OUT, vertico has it anyhow!
+
+  ;; Searching
+  ("C-s" . consult-line)              ; This one is also correct [citation:12]
+  ("C-c g" . consult-grep)            ; For project-wide grep [citation:12]
+  ("C-c j" . consult-git-grep)        ; For git grep [citation:12]
+  ("C-M-s" . consult-ripgrep)         ; For ripgrep [citation:12]
+  :config
+  (setq consult-project-root-function #'project-root))
 #+END_SRC
-
-#+RESULTS:
-: swiper
-
-** smex — frecency history backend for counsel-M-x
-smex is kept as a history backend only; counsel-M-x uses it automatically
-when installed. The direct M-x binding is now handled by counsel above.
-#+BEGIN_SRC emacs-lisp
-  (use-package smex
-    :ensure t)
-#+END_SRC
-
 ** which-key
 #+BEGIN_SRC emacs-lisp
   (use-package which-key

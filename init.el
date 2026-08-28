@@ -1,7 +1,14 @@
+;; -*- lexical-binding: t; -*-
+
 ;; Remove this line from init.el — already handled in config.el:
 ;; (setq mac-option-modifier 'meta)
 ;; Use right Option key normally for special characters
 (setq mac-right-option-modifier nil)
+
+;;; the auto-revert timer that calls incf fires from a package that should be loaded before your config
+;;;(require 'cl-lib)
+;;;(defalias 'incf 'cl-incf)
+;;;(advice-add 'incf :override #'cl-incf)
 
 ;;; This is all kinds of necessary
 (require 'package)
@@ -24,10 +31,6 @@
   (package-refresh-contents)
   (package-install 'spacemacs-theme))
 
-;;; the auto-revert timer that calls incf fires from a package that should be loaded before your config
-(require 'cl-lib)
-(defalias 'incf 'cl-incf)
-(advice-add 'incf :override #'cl-incf)
 ;;; This is the actual config file. It is omitted if it doesn't exist so emacs won't refuse to launch.
 (when (file-readable-p "~/.emacs.d/config.org")
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
@@ -43,7 +46,14 @@
    '("01f347a923dd21661412d4c5a7c7655bf17fb311b57ddbdbd6fce87bd7e58de6"
      "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
      default))
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(auctex avy beacon browse-kill-ring company-c-headers company-irony
+	    company-jedi company-shell consult counsel dashboard
+	    expand-region flycheck-clang-analyzer git-commit htmlize
+	    hungry-delete ido-vertical-mode linum-relative magit
+	    marginalia mark-multiple markdown-mode orderless ox-reveal
+	    pdf-tools popup-kill-ring smex spacemacs-theme sudo-edit
+	    switch-window vertico yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
