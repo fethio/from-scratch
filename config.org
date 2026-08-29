@@ -8,7 +8,7 @@
 
 * startup
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; -*- lexical-binding: t; -*-
+    ;; -*- lexical-binding: t; -*-
 #+END_SRC
 
 some packages depend on cl-lib 
@@ -214,29 +214,34 @@ now, the rest of the system
         (setq completion-category-defaults nil)
         (setq completion-category-overrides '((file (styles partial-completion)))))
 
-    ;; Just load and configure consult
-    (use-package consult
+      (use-package consult
       :ensure t
       :after vertico
       :init
       :config
       (require 'consult)
     :bind
-  ;; The correct M-x replacement
-  ;;("M-x" . consult-command)           ; As you discovered, this is the command for M-x [citation:12]
-
-  ;; File and buffer finding
-  ("C-x C-f" . consult-find)          ; Correct command for finding files [citation:1][citation:12]
-  ("C-x b" . consult-buffer)          ; This one was correct! [citation:12], COMMENTED OUT, vertico has it anyhow!
-
-  ;; Searching
-  ("C-s" . consult-line)              ; This one is also correct [citation:12]
-  ("C-c g" . consult-grep)            ; For project-wide grep [citation:12]
-  ("C-c j" . consult-git-grep)        ; For git grep [citation:12]
-  ("C-M-s" . consult-ripgrep)         ; For ripgrep [citation:12]
-  :config
-  (setq consult-project-root-function #'project-root))
+    ;; The correct M-x replacement
+    ;;("M-x" . consult-command)           ; As you discovered, this is the command for M-x [citation:12]
+  
+    ;; File and buffer finding
+    ("C-x C-F" . consult-find)          ; Correct command for finding files [citation:1][citation:12]
+    ("C-x b" . consult-buffer)          ; This one was correct! [citation:12], COMMENTED OUT, vertico has it anyhow!
+  
+    ;; Searching
+    ("C-s" . consult-line)              ; This one is also correct [citation:12]
+    ("C-c g" . consult-grep)            ; For project-wide grep [citation:12]
+    ("C-c j" . consult-git-grep)        ; For git grep [citation:12]
+    ("C-M-s" . consult-ripgrep)         ; For ripgrep [citation:12]
+    :config
+    (setq consult-project-root-function #'project-root))
 #+END_SRC
+** restore find-file keybinding
+because consult may be overriding it
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-f") 'find-file)
+#+END_SRC
+
 ** which-key
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -244,7 +249,6 @@ now, the rest of the system
     :init
     (which-key-mode 1))
 #+END_SRC
-
 ** avy
 avy operates on visible buffer characters — completely orthogonal to
 the minibuffer completion stack, no conflicts.
