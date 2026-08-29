@@ -46,14 +46,7 @@
    '("01f347a923dd21661412d4c5a7c7655bf17fb311b57ddbdbd6fce87bd7e58de6"
      "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf"
      default))
- '(package-selected-packages
-   '(auctex avy beacon browse-kill-ring company-c-headers company-irony
-	    company-jedi company-shell consult counsel dashboard
-	    expand-region flycheck-clang-analyzer git-commit htmlize
-	    hungry-delete ido-vertical-mode linum-relative magit
-	    marginalia mark-multiple markdown-mode orderless ox-reveal
-	    pdf-tools popup-kill-ring smex spacemacs-theme sudo-edit
-	    switch-window vertico yasnippet)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
