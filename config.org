@@ -16,6 +16,11 @@ some packages depend on cl-lib
       (require 'cl-lib)
 #+END_SRC
 
+Set the custom file exported by Save Options
+#+begin_src emacs-lisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file) (load custom-file))
+#+end_src
 * Font Configuration
 #+BEGIN_SRC emacs-lisp
   ;; Global default font size (160 = 16pt, adjust as needed)
