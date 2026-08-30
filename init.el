@@ -57,11 +57,5 @@
 	    pdf-tools popup-kill-ring smex spacemacs-theme sudo-edit
 	    switch-window vertico yasnippet))
  '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#292b2e" :foreground "#b2b2b2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :width normal :family "Source Code Pro" :foundry "ADBO" :height 102)))))
 
 (put 'scroll-left 'disabled nil)
