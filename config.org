@@ -93,7 +93,10 @@ Having many buffers is useful, but can be tedious to work with, let us see how w
 #+BEGIN_SRC emacs-lisp
   (desktop-save-mode 1)
 #+END_SRC
-
+** ibuffer binding
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x B") 'ibuffer)
+#+END_SRC
 ** Always murder current buffer
 Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
 #+BEGIN_SRC emacs-lisp
@@ -210,7 +213,7 @@ now, the rest of the system
         (setq vertico-cycle t)  ; Enable cycling through candidates
         (setq vertico-count 15) ; Number of candidates to show
         :bind
-        ("C-x B" . vertico-buffer-mode)  ; Replace ibuffer binding temporarily
+        ("C-x V" . vertico-buffer-mode)  ; Replace ibuffer binding temporarily
         :custom
         (vertico-resize t))  ; Resize minibuffer as needed
 
