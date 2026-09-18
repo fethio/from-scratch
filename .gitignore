@@ -18,6 +18,7 @@ elpa/
 ido.last
 recentf
 smex-items
+
 # snippets/
 tramp
 eshell/
@@ -38,10 +39,11 @@ session.*
 eshell/
 eln-cache/
 .emacs.desktop*
+recentf.eld
 
 elpy/
-elpy/
 eln-cache/
+org-persist/
 eshell/history
 eshell/lastdir
 transient/history.el
