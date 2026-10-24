@@ -401,13 +401,13 @@ Single consolidated babel languages block.
 #+END_SRC
 
 ** reveal.js stuff
-#+BEGIN_SRC elisp
-  (use-package ox-reveal
-    :ensure ox-reveal)
-
-  (setq org-reveal-root "file:///home/fethi/software/reveal.js")
-  ;;(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-  (setq org-reveal-mathjax t)
+#+BEGIN_SRC emacs-lisp
+  (use-package org-re-reveal
+    :ensure t
+    :config
+    (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+    (setq org-re-reveal-revealjs-version "4")
+    (setq org-re-reveal-mathjax t))
 
   (use-package htmlize
     :ensure t)
