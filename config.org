@@ -356,6 +356,12 @@ Single consolidated babel languages block.
      (shell  . t)))
 #+end_src
 
+** disable auto-revert in org buffers
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (auto-revert-mode -1)))
+#+END_SRC
 * latex
 #+BEGIN_SRC emacs-lisp
   (use-package tex
